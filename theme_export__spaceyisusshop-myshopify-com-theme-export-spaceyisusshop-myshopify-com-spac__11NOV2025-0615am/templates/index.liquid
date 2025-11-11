@@ -16,9 +16,7 @@
       --color-text: #ffffff;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -30,7 +28,6 @@
       min-height: 100vh;
     }
 
-    /* HEADER */
     header {
       background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
       padding: 0.8rem 2rem;
@@ -58,11 +55,8 @@
       transition: color 0.3s ease;
     }
 
-    nav a:hover {
-      color: var(--color-accent);
-    }
+    nav a:hover { color: var(--color-accent); }
 
-    /* HERO */
     .hero {
       text-align: center;
       padding: 6rem 2rem;
@@ -74,10 +68,8 @@
     .hero::after {
       content: "";
       position: absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
+      top:0; left:0;
+      width:100%; height:100%;
       background: rgba(0,0,0,0.4);
     }
 
@@ -88,15 +80,8 @@
       margin: auto;
     }
 
-    .hero h2 {
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-    }
+    .hero h2 { font-size: 2.8rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; margin-bottom: 2rem; }
 
     .hero a.button {
       background: var(--color-primary);
@@ -110,11 +95,8 @@
       text-decoration: none;
     }
 
-    .hero a.button:hover {
-      background: #7e22ce;
-    }
+    .hero a.button:hover { background: #7e22ce; }
 
-    /* PRODUCTOS */
     .featured {
       text-align: center;
       margin: 3rem auto;
@@ -181,11 +163,8 @@
       transition: background 0.3s ease;
     }
 
-    .btn-buy:hover {
-      background: #7e22ce;
-    }
+    .btn-buy:hover { background: #7e22ce; }
 
-    /* BOTÓN EXTRA */
     .btn-catalogo {
       display: inline-block;
       margin-top: 2rem;
@@ -198,11 +177,8 @@
       transition: background 0.3s ease;
     }
 
-    .btn-catalogo:hover {
-      background: var(--color-primary);
-    }
+    .btn-catalogo:hover { background: var(--color-primary); }
 
-    /* FOOTER */
     footer {
       text-align: center;
       background: #111827;
@@ -233,12 +209,11 @@
     </div>
   </section>
 
-  <!-- Productos destacados dinámicos -->
+  <!-- Productos destacados -->
   <section class="featured" id="featured">
     <h2>✨ Productos Destacados ✨</h2>
     <div class="products">
       {% assign dser_collection = collections['dsers-products'] %}
-
       {% if dser_collection.products != blank %}
         {% for product in dser_collection.products limit:4 %}
           {% if product.available %}
@@ -263,13 +238,38 @@
       {% endif %}
     </div>
 
-    <!-- Botón para ver el catálogo -->
     <a href="/collections/catalogo" class="btn-catalogo">Ver todo el catálogo</a>
+  </section>
+
+  <!-- ✅ BOTÓN DE PAGO MERCADO PAGO -->
+  <section style="text-align:center; margin:3rem 0;">
+    <h2>Paga con seguridad usando Mercado Pago 💳</h2>
+    <div class="cho-container" style="margin: 2rem auto;"></div>
   </section>
 
   <footer>
     <p>© 2025 SpaceYisus Shop | Todos los derechos reservados</p>
   </footer>
+
+  <!-- SDK oficial de Mercado Pago -->
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+  <script>
+    // Inicializa Mercado Pago con tus credenciales
+    const mp = new MercadoPago('APP_USR-78d7e2b3-64ad-40cb-8c44-ccfa133d46d1', {
+      locale: 'es-CO'
+    });
+
+    // Renderiza el botón con tu ID de preferencia
+    mp.checkout({
+      preference: {
+        id: 'APP_USR-1746580166236553-111107-65fd62c12889b5708fb31bed44489519-2981231158'
+      },
+      render: {
+        container: '.cho-container',
+        label: 'Pagar con Mercado Pago'
+      }
+    });
+  </script>
 
 </body>
 </html>
