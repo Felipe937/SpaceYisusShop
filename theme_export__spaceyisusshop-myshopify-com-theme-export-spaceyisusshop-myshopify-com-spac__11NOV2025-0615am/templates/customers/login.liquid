@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login, Registro y Recuperación</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://www.gureakdatapost.com/wp-content/uploads/2024/07/iStock-1281884522.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      width: 340px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .toggle-link a {
+      text-decoration: none;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .error-message {
+      color: #ffcccc;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Formulario de Inicio de Sesión -->
+    <div id="login-form">
+      <h2>Iniciar Sesión</h2>
+      <form id="loginForm">
+        <input type="text" id="usuario" name="usuario" placeholder="Usuario" required>
+        <input type="password" id="clave" name="clave" placeholder="Contraseña" required>
+        <button type="submit">Entrar</button>
+      </form>
+      <div class="error-message" id="login-error"></div>
+      <div class="toggle-link"><a onclick="showForgotForm()">¿Olvidaste tu contraseña?</a></div>
+      <div class="toggle-link"><a onclick="toggleForms()">¿No tienes cuenta? Regístrate</a></div>
+    </div>
+
+    <!-- Formulario de Registro -->
+    <div id="register-form" style="display:none;">
+      <h2>Crear Cuenta</h2>
+      <form>
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="text" name="apellido" placeholder="Apellido" required>
+        <input type="tel" name="telefono" placeholder="Número de teléfono" pattern="[0-9]{10}" title="Ingrese un número de 10 dígitos" required>
+        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <input type="text" name="usuario" placeholder="Usuario" required>
+        <input type="password" name="clave" placeholder="Contraseña" required>
+        <input type="password" name="clave2" placeholder="Confirmar contraseña" required>
+        <button type="submit">Registrarse</button>
+      </form>
+      <div class="toggle-link"><a onclick="toggleForms()">¿Ya tienes cuenta? Inicia sesión</a></div>
+    </div>
+
+    <!-- Formulario de Recuperación -->
+    <div id="forgot-form" style="display:none;">
+      <h2>Recuperar Contraseña</h2>
+      <form>
+        <input type="email" name="email" placeholder="Ingresa tu correo" required>
+        <button type="submit">Enviar enlace</button>
+      </form>
+      <div class="toggle-link"><a onclick="backToLogin()">Volver al inicio de sesión</a></div>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleForms() {
+      const login = document.getElementById('login-form');
+      const register = document.getElementById('register-form');
+      login.style.display = login.style.display === "none" ? "block" : "none";
+      register.style.display = register.style.display === "none" ? "block" : "none";
+    }
+
+    function showForgotForm() {
+      document.getElementById('login-form').style.display = "none";
+      document.getElementById('forgot-form').style.display = "block";
+    }
+
+    function backToLogin() {
+      document.getElementById('forgot-form').style.display = "none";
+      document.getElementById('login-form').style.display = "block";
+    }
+
+    // Validación simple
+    const usuarioValido = "admin";
+    const claveValida = "1234";
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value;
+      const clave = document.getElementById('clave').value;
+      const error = document.getElementById('login-error');
+
+      if (usuario !== usuarioValido) {
+        error.textContent = "Usuario incorrecto";
+        error.style.display = "block";
+      } else if (clave !== claveValida) {
+        error.textContent = "Contraseña incorrecta";
+        error.style.display = "block";
+      } else {
+        error.style.display = "none";
+        alert("¡Bienvenido " + usuario + "!");
+      }
+    });
+  </script>
+
+</body>
+</html>

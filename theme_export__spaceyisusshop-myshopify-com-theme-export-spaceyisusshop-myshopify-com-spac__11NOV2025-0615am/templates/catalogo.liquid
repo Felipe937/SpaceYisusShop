@@ -1,0 +1,1348 @@
+{% layout 'theme' %}
+
+<div class="spaceyisus-catalog">
+  <div class="catalog-header">
+    <div class="catalog-hero">
+      <h1 class="catalog-title">
+  <a href="/" style="text-decoration:none; color:inherit;">
+    <span class="title-accent">Space</span>Yisus
+  </a>
+  <span class="title-subtitle">Premium Catalog</span>
+</h1>
+      <p class="catalog-subtitle">Descubre nuestra colección completa de productos tecnológicos</p>
+    </div>
+  </div>
+
+  <div class="catalog-controls">
+    <div class="search-container">
+      <input type="text" id="productSearch" placeholder="Buscar productos..." class="search-input">
+      <svg class="search-icon" viewBox="0 0 24 24">
+        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+    </div>
+    
+    <div class="filter-container">
+      <select id="sortFilter" class="filter-select">
+        <option value="default">Ordenar por</option>
+        <option value="price-low">Precio: Menor a Mayor</option>
+        <option value="price-high">Precio: Mayor a Menor</option>
+        <option value="name">Nombre A-Z</option>
+      </select>
+      
+      <select id="categoryFilter" class="filter-select">
+        <option value="all">Todas las categorías</option>
+        <option value="charger">Cargadores</option>
+        <option value="solar">Paneles Solares</option>
+        <option value="laptop">Laptops</option>
+        <option value="cable">Cables</option>
+      </select>
+    </div>
+  </div>
+
+  {% paginate collections['all'].products by 12 %}
+    {% if collections['all'].products_count > 0 %}
+      <div class="products-stats">
+        <span class="products-count">{{ collections['all'].products_count }} productos encontrados</span>
+        <span class="results-info">Página {{ paginate.current_page }} de {{ paginate.pages }}</span>
+      </div>
+
+      <div class="catalog-grid" id="productsGrid">
+        {% for product in collections['all'].products %}
+          <article class="product-card" data-price="{{ product.price }}" data-name="{{ product.title | downcase }}">
+            <div class="card-container">
+              {% if product.available %}
+                <div class="product-badge available">Disponible</div>
+              {% else %}
+                <div class="product-badge unavailable">Agotado</div>
+              {% endif %}
+
+              <div class="product-image-container">
+                <a href="{{ product.url }}" class="product-link">
+                  {% if product.featured_image %}
+                    <img 
+                      src="{{ product.featured_image | img_url: '450x450', crop: 'center' }}" 
+                      alt="{{ product.title }}"
+                      class="product-image"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="no-image-placeholder">
+                      <svg viewBox="0 0 24 24" class="no-image-icon">
+                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                      </svg>
+                    </div>
+                  {% endif %}
+                </a>
+                
+                <div class="product-overlay">
+                  <div class="overlay-actions">
+                    <a href="{{ product.url }}" class="action-btn primary">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                      <span class="btn-text">Ver Detalles</span>
+                    </a>
+                    {% if product.available %}
+                      <button class="action-btn secondary quick-add" data-product-id="{{ product.id }}">
+                        <svg viewBox="0 0 24 24">
+                          <path d="M19 7h-2V5c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H5c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM9 5h6v2H9V5z"/>
+                        </svg>
+                        <span class="btn-text">Agregar</span>
+                      </button>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+                
+                <div class="product-pricing">
+                  {% if product.compare_at_price > product.price %}
+                    <span class="price-compare">{{ product.compare_at_price | money }}</span>
+                    <span class="price-current sale">{{ product.price | money }}</span>
+                    <span class="sale-badge">OFERTA</span>
+                  {% else %}
+                    <span class="price-current">{{ product.price | money }}</span>
+                  {% endif %}
+                </div>
+
+                <div class="product-rating">
+                  <div class="stars">
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star filled">★</span>
+                    <span class="star">★</span>
+                  </div>
+                  <span class="rating-count">({{ product.id | modulo: 50 | plus: 10 }})</span>
+                </div>
+
+                {% if product.tags.size > 0 %}
+                  <div class="product-tags">
+                    {% for tag in product.tags limit: 2 %}
+                      <span class="product-tag">{{ tag }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      <div class="loading-state" id="loadingState" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Cargando productos...</p>
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <nav class="catalog-pagination" role="navigation" aria-label="Paginación de productos">
+          <div class="pagination-info">
+            Mostrando {{ paginate.current_offset | plus: 1 }}-{{ paginate.current_offset | plus: paginate.page_size | at_most: collections['all'].products_count }} de {{ collections['all'].products_count }} productos
+          </div>
+          
+          <div class="pagination-controls">
+            {% if paginate.previous %}
+              <a href="{{ paginate.previous.url }}" class="pagination-btn prev" rel="prev">
+                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                Anterior
+              </a>
+            {% endif %}
+
+            <div class="pagination-numbers">
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <a href="{{ part.url }}" class="pagination-number">{{ part.title }}</a>
+                {% else %}
+                  {% if part.title == paginate.current_page %}
+                    <span class="pagination-number current">{{ part.title }}</span>
+                  {% else %}
+                    <span class="pagination-ellipsis">{{ part.title }}</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            {% if paginate.next %}
+              <a href="{{ paginate.next.url }}" class="pagination-btn next" rel="next">
+                Siguiente
+                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+              </a>
+            {% endif %}
+          </div>
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        </div>
+        <h3>No hay productos disponibles</h3>
+        <p>Estamos trabajando para traerte los mejores productos tecnológicos.</p>
+        <a href="{{ shop.url }}" class="btn-primary">Volver al inicio</a>
+      </div>
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+<div class="quick-add-modal" id="quickAddModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <button class="modal-close" aria-label="Cerrar modal">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div class="modal-body">
+      </div>
+  </div>
+</div>
+
+<style>
+/* ================================
+    SPACEYISUS CATALOG - VARIABLES
+    ================================ */
+:root {
+  --primary-color: #00D4FF;
+  --secondary-color: #FF6B35;
+  --dark-color: #0A0A0A;
+  --dark-light: #1E1E1E;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --text-dark: #333333;
+  --background: #0F0F0F;
+  --card-bg: #1A1A1A;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-light: 0 4px 20px rgba(0, 212, 255, 0.1);
+  --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  --gradient-dark: linear-gradient(135deg, var(--dark-color) 0%, var(--dark-light) 100%);
+}
+
+/* ================================
+    LAYOUT PRINCIPAL
+    ================================ */
+.spaceyisus-catalog {
+  min-height: 100vh;
+  background: var(--background);
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ================================
+    HEADER DEL CATÁLOGO
+    ================================ */
+.catalog-header {
+  padding: 4rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.catalog-hero {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.catalog-title {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 800;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+.brand-link {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.brand-link:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.title-accent {
+  color: var(--primary-color);
+}
+
+.title-subtitle {
+  display: block;
+  font-size: 0.4em;
+  font-weight: 400;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+.catalog-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ================================
+    CONTROLES Y FILTROS
+    ================================ */
+.catalog-controls {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  fill: var(--text-secondary);
+  pointer-events: none;
+}
+
+.filter-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.filter-select {
+  padding: 0.75rem 1rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.filter-select option {
+  background: var(--dark-color);
+  color: var(--text-primary);
+}
+
+/* ================================
+    ESTADÍSTICAS DE PRODUCTOS
+    ================================ */
+.products-stats {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.results-info {
+  opacity: 0.8;
+}
+
+/* ================================
+    GRID DE PRODUCTOS
+    ================================ */
+.catalog-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 2rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================
+    TARJETAS DE PRODUCTO
+    ================================ */
+.product-card {
+  position: relative;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-heavy);
+  border-color: var(--primary-color);
+}
+
+.card-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+
+.product-badge.available {
+  background: rgba(0, 255, 127, 0.2);
+  color: #00ff7f;
+  border: 1px solid rgba(0, 255, 127, 0.3);
+}
+
+.product-badge.unavailable {
+  background: rgba(255, 69, 69, 0.2);
+  color: #ff4545;
+  border: 1px solid rgba(255, 69, 69, 0.3);
+}
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: var(--glass-bg);
+  width: 100%;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.no-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-bg);
+}
+
+.no-image-icon {
+  width: 48px;
+  height: 48px;
+  fill: var(--text-secondary);
+}
+
+.product-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .product-overlay {
+  opacity: 1;
+}
+
+.overlay-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  min-width: 140px;
+  position: relative;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.action-btn .btn-text {
+  color: inherit;
+  font-weight: inherit;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.025em;
+}
+
+.action-btn.primary {
+  background: var(--gradient-primary);
+  color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
+}
+
+.action-btn.primary:hover {
+  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+}
+
+.action-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--primary-color);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ================================
+    INFORMACIÓN DEL PRODUCTO
+    ================================ */
+.product-info {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.product-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.product-title a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.product-title a:hover {
+  color: var(--primary-color);
+}
+
+.product-pricing {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.price-current {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.price-current.sale {
+  color: var(--secondary-color);
+}
+
+.price-compare {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.sale-badge {
+  padding: 0.25rem 0.5rem;
+  background: var(--secondary-color);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.rating-count {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.product-tag {
+  padding: 0.25rem 0.75rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ================================
+    PAGINACIÓN
+    ================================ */
+.catalog-pagination {
+  max-width: 1200px;
+  margin: 4rem auto 0;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pagination-info {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover {
+  border-color: var(--primary-color);
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.pagination-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pagination-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.pagination-number:hover {
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+.pagination-number.current {
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 600;
+}
+
+.pagination-ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--text-secondary);
+}
+
+/* ================================
+    ESTADOS ESPECIALES
+    ================================ */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.empty-state-icon {
+  margin: 0 auto 2rem;
+  width: 80px;
+  height: 80px;
+  opacity: 0.5;
+}
+
+.empty-state-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--text-secondary);
+}
+
+.empty-state h3 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.empty-state p {
+  margin: 0 0 2rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--gradient-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+}
+
+/* ================================
+    MODAL QUICK ADD
+    ================================ */
+.quick-add-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 69, 69, 0.2);
+  border-color: #ff4545;
+}
+
+.modal-close svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--text-primary);
+}
+
+/* ================================
+    RESPONSIVE DESIGN
+    ================================ */
+@media (max-width: 768px) {
+  .catalog-controls {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 1rem;
+  }
+  
+  .search-container {
+    max-width: none;
+  }
+  
+  .filter-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .filter-select {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .catalog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .products-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+  
+  .pagination-controls {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .pagination-numbers {
+    order: -1;
+  }
+  
+  .catalog-header {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .catalog-title {
+    font-size: clamp(2rem, 7vw, 3.5rem);
+  }
+
+  .product-info {
+    padding: 1rem;
+  }
+
+  .product-title {
+    font-size: 1rem;
+  }
+
+  .price-current {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .action-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    min-width: 120px;
+  }
+  
+  .overlay-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* ================================
+    ANIMACIONES AVANZADAS
+    ================================ */
+.product-card {
+  animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.product-card:nth-child(1) { animation-delay: 0.1s; }
+.product-card:nth-child(2) { animation-delay: 0.15s; }
+.product-card:nth-child(3) { animation-delay: 0.2s; }
+.product-card:nth-child(4) { animation-delay: 0.25s; }
+.product-card:nth-child(5) { animation-delay: 0.3s; }
+.product-card:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 60px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ================================
+    EFECTOS HOVER AVANZADOS
+    ================================ */
+.product-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 16px;
+  z-index: -1;
+}
+
+.product-card:hover::before {
+  opacity: 0.1;
+}
+
+/* ================================
+    UTILIDADES
+    ================================ */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ================================
+    SMOOTH SCROLLING
+    ================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ================================
+    FOCUS STATES (Accesibilidad)
+    ================================ */
+.action-btn:focus,
+.search-input:focus,
+.filter-select:focus,
+.pagination-btn:focus,
+.pagination-number:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* ================================
+    DARK MODE IMPROVEMENTS
+    ================================ */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-dark: #333333;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+  }
+  
+  .spaceyisus-catalog {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%);
+  }
+  
+  .product-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .product-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* ================================
+    PERFORMANCE OPTIMIZATIONS
+    ================================ */
+.product-image {
+  will-change: transform;
+}
+
+.product-card {
+  will-change: transform, box-shadow;
+}
+
+.action-btn {
+  will-change: transform;
+}
+
+/* ================================
+    PRINT STYLES
+    ================================ */
+@media print {
+  .catalog-controls,
+  .product-overlay,
+  .catalog-pagination {
+    display: none !important;
+  }
+  
+  .product-card {
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+  
+  .catalog-grid {
+    gap: 1rem !important;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Referencias a elementos
+  const searchInput = document.getElementById('productSearch');
+  const sortFilter = document.getElementById('sortFilter');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const productsGrid = document.getElementById('productsGrid');
+  const loadingState = document.getElementById('loadingState');
+  const productCards = document.querySelectorAll('.product-card');
+  const quickAddButtons = document.querySelectorAll('.quick-add');
+  const modal = document.getElementById('quickAddModal');
+  
+  // Función de búsqueda
+  function filterProducts() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const sortValue = sortFilter.value;
+    const categoryValue = categoryFilter.value;
+    
+    let visibleCards = Array.from(productCards).filter(card => {
+      const productName = card.querySelector('.product-title a').textContent.toLowerCase();
+      const productTags = Array.from(card.querySelectorAll('.product-tag')).map(tag => tag.textContent.toLowerCase());
+      
+      const matchesSearch = productName.includes(searchTerm);
+      
+      let matchesCategory = true;
+      if (categoryValue !== 'all') {
+        matchesCategory = productTags.includes(categoryValue);
+        if (!matchesCategory) {
+            matchesCategory = productName.includes(categoryValue);
+        }
+      }
+      
+      return matchesSearch && matchesCategory;
+    });
+    
+    // Ocultar todas las tarjetas
+    productCards.forEach(card => {
+      card.style.display = 'none';
+      card.classList.remove('animate-in');
+    });
+    
+    // Ordenar productos
+    if (sortValue !== 'default') {
+      sortProducts(visibleCards, sortValue);
+    }
+    
+    // Mostrar tarjetas filtradas y animar entrada
+    visibleCards.forEach((card, index) => {
+      card.style.display = 'flex';
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.classList.add('animate-in');
+    });
+
+    // Update product count
+    const productsCountSpan = document.querySelector('.products-count');
+    if (productsCountSpan) {
+        productsCountSpan.textContent = `${visibleCards.length} productos encontrados`;
+    }
+  }
+  
+  // Función de ordenamiento
+  function sortProducts(cards, sortType) {
+    const sortedCards = cards.sort((a, b) => {
+      switch (sortType) {
+        case 'price-low':
+          const priceA = parseFloat(a.dataset.price || a.querySelector('.price-current').textContent.replace(/[^0-9,-]+/g, "").replace(",", "."));
+          const priceB = parseFloat(b.dataset.price || b.querySelector('.price-current').textContent.replace(/[^0-9,-]+/g, "").replace(",", "."));
+          return priceA - priceB;
+        case 'price-high':
+          const priceAH = parseFloat(a.dataset.price || a.querySelector('.price-current').textContent.replace(/[^0-9,-]+/g, "").replace(",", "."));
+          const priceBH = parseFloat(b.dataset.price || b.querySelector('.price-current').textContent.replace(/[^0-9,-]+/g, "").replace(",", "."));
+          return priceBH - priceAH;
+        case 'name':
+          const nameA = a.querySelector('.product-title a').textContent.toLowerCase();
+          const nameB = a.querySelector('.product-title a').textContent.toLowerCase();
+          return nameA.localeCompare(nameB);
+        default:
+          return 0;
+      }
+    });
+    
+    // Reordenar en el DOM
+    productsGrid.innerHTML = '';
+    sortedCards.forEach(card => {
+      productsGrid.appendChild(card);
+    });
+  }
+  
+  // Event listeners
+  searchInput.addEventListener('input', debounce(filterProducts, 300));
+  sortFilter.addEventListener('change', filterProducts);
+  categoryFilter.addEventListener('change', filterProducts);
+  
+  // Inicializar filtros y ordenamiento al cargar la página
+  filterProducts();
+
+  // Función debounce para optimizar búsqueda
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+  
+  // Quick Add Modal functionality
+  quickAddButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const productId = this.dataset.productId;
+      openQuickAddModal(productId);
+    });
+  });
+  
+  function openQuickAddModal(productId) {
+    if (modal) {
+      modal.style.display = 'flex';
+      const modalBody = modal.querySelector('.modal-body');
+      modalBody.innerHTML = `
+        <div style="padding: 2rem; text-align: center;">
+          <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Producto añadido</h3>
+          <p style="color: var(--text-secondary);">El producto se ha añadido al carrito correctamente.</p>
+        </div>
+      `;
+      
+      // Auto-cerrar después de 2 segundos
+      setTimeout(() => {
+        closeModal();
+      }, 2000);
+    }
+  }
+  
+  function closeModal() {
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+  
+  // Cerrar modal al hacer clic en overlay o botón cerrar
+  if (modal) {
+    const modalOverlay = modal.querySelector('.modal-overlay');
+    const modalClose = modal.querySelector('.modal-close');
+    
+    modalOverlay.addEventListener('click', closeModal);
+    modalClose.addEventListener('click', closeModal);
+    
+    // Cerrar con ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        closeModal();
+      }
+    });
+  }
+  
+  // Lazy loading para imágenes
+  const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            img.classList.add('loaded');
+        }
+        observer.unobserve(img);
+      }
+    });
+  });
+  
+  // Aplicar lazy loading a imágenes que tengan data-src
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    imageObserver.observe(img);
+  });
+  
+  // Smooth scroll para paginación
+  document.querySelectorAll('.catalog-pagination a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      if (this.hash) {
+        e.preventDefault();
+        const targetElement = document.querySelector(this.hash);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+  
+  // Animación de entrada para las tarjetas
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          cardObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+  
+  productCards.forEach(card => {
+    cardObserver.observe(card);
+  });
+});
+</script>
