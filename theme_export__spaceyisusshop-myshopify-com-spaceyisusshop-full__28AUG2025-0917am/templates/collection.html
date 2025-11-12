@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colección - SpaceYisus Shop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f1a;
+            color: #fff;
+        }
+        header {
+            background: linear-gradient(90deg, #1e3a8a, #9333ea);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ffd700;
+        }
+        .wrap {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .collection-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+        .collection-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        .collection-description {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #d1d5db;
+            line-height: 1.7;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+        .product-card {
+            background: #1f2937;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        .product-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        .product-info {
+            padding: 1.5rem;
+        }
+        .product-info h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.1rem;
+            color: #fff;
+            min-height: 3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 0.5rem 0 0;
+        }
+        .no-products {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 3rem 0;
+            color: #9ca3af;
+            font-size: 1.1rem;
+        }
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .sorting-options {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        select {
+            background: #1f2937;
+            color: #fff;
+            border: 1px solid #374151;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .product-count {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        footer {
+            text-align: center;
+            background: #111827;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+            .collection-header h2 {
+                font-size: 2rem;
+            }
+            .filters {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 SpaceYisus Shop</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="collection.html" style="color: #ffd700;">Catálogo</a>
+            <a href="#">Ofertas</a>
+            <a href="contact.html">Contacto</a>
+        </nav>
+    </header>
+
+    <div class="wrap">
+        <div class="collection-header">
+            <h2>Nuestra Colección</h2>
+            <div class="collection-description">
+                <p>Explora nuestra exclusiva selección de productos de alta calidad. Cada artículo ha sido cuidadosamente seleccionado para ofrecerte lo mejor en tecnología y estilo de vida.</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="product-count">Mostrando 8 productos</div>
+            <div class="sorting-options">
+                <label for="sort-by">Ordenar por:</label>
+                <select id="sort-by">
+                    <option value="featured">Destacados</option>
+                    <option value="price-ascending">Precio: Menor a mayor</option>
+                    <option value="price-descending">Precio: Mayor a menor</option>
+                    <option value="title-ascending">Nombre: A-Z</option>
+                    <option value="title-descending">Nombre: Z-A</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="products-grid">
+            <!-- Producto 1 -->
+            <a href="product.html?id=smartwatch-pro-x1" class="product-card">
+                <div class="product-image">
+                    <img src="https://atumano.com.co/wp-content/uploads/2024/01/msg1330939853-11079.jpg" alt="Smartwatch Pro X1">
+                </div>
+                <div class="product-info">
+                    <h3>Smartwatch Pro X1</h3>
+                    <div class="product-price">$1,499,950 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 2 -->
+            <a href="product.html?id=cargador-rapido-45w" class="product-card">
+                <div class="product-image">
+                    <img src="https://exitocol.vtexassets.com/arquivos/ids/826867/Cargador-Samsung-45W-USB-Type-C-Fast-Charge-Wall-Charger.jpg?v=637073505765800000" alt="Cargador Rápido 45W USB-C">
+                </div>
+                <div class="product-info">
+                    <h3>Cargador Rápido 45W USB-C</h3>
+                    <div class="product-price">$176,900 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 3 -->
+            <a href="product.html?id=nerdminer-v3" class="product-card">
+                <div class="product-image">
+                    <img src="https://ae01.alicdn.com/kf/S38202af44dfb47a7b890f2389dda1e81a.jpg" alt="Nerdminer v3 Bitcoin Miner">
+                </div>
+                <div class="product-info">
+                    <h3>Nerdminer v3 Bitcoin Miner</h3>
+                    <div class="product-price">$730,600 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 4 -->
+            <a href="product.html?id=cargador-laptop-240w" class="product-card">
+                <div class="product-image">
+                    <img src="https://articulo.mercadolibre.com.co/MCO-3156196132-nuevo-cargador-de-laptop-de-240w-de-240w-compatible-con-dell-_JMS" alt="Cargador Laptop 240W">
+                </div>
+                <div class="product-info">
+                    <h3>Cargador Laptop 240W</h3>
+                    <div class="product-price">$1,177,200 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 5 -->
+            <a href="product.html" class="product-card">
+                <div class="product-image">
+                    <img src="https://www.cryptominerbros.com/wp-content/uploads/2025/04/LV06.webp" alt="Producto 5">
+                </div>
+                <div class="product-info">
+                    <h3>Lucky Miner Bitcoin LV06</h3>
+                    <div class="product-price">$415.001,39 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 6 -->
+            <a href="product.html" class="product-card">
+                <div class="product-image">
+                    <img src="https://eu.venum.com/cdn/shop/files/a9d215321dd9da47d52d9409ba7014d592ed87ff_VENUM_05017_001___VNM___1_256x@3x.jpg?v=1750253306" alt="Producto 6">
+                </div>
+                <div class="product-info">
+                    <h3>Camiseta Algodón Premium</h3>
+                    <div class="product-price">$73.812,57 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 7 -->
+            <a href="product.html" class="product-card">
+                <div class="product-image">
+                    <img src="https://ae01.alicdn.com/kf/Sf8a5bf463d7b458590bf2d64879e94c55.jpg" alt="Producto 7">
+                </div>
+                <div class="product-info">
+                    <h3>Avalon Nano3 4T Miner</h3>
+                    <div class="product-price">$2.272.590,93 COP</div>
+                </div>
+            </a>
+
+            <!-- Producto 8 -->
+            <a href="product.html?id=xiaomi-redmi-airdots-2" class="product-card">
+                <div class="product-image">
+                    <img src="https://exitocol.vtexassets.com/arquivos/ids/10981656/audifonos-xiaomi-redmi-airdots-2.jpg?v=637732193318300000" alt="Xiaomi Redmi Airdots 2">
+                </div>
+                <div class="product-info">
+                    <h3>Xiaomi Redmi Airdots 2</h3>
+                    <div class="product-price">$233,400 COP</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 SpaceYisus Shop | Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Simulación de funcionalidad de ordenación
+        document.getElementById('sort-by').addEventListener('change', function() {
+            // Aquí iría la lógica para ordenar los productos
+            console.log('Ordenar por:', this.value);
+        });
+    </script>
+</body>
+</html>

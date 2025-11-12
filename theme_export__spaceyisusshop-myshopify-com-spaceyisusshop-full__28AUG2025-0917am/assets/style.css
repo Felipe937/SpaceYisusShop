@@ -1,0 +1,16 @@
+/* Fondo solo en login */
+body.login-page {
+  background: url('https://www.gureakdatapost.com/wp-content/uploads/2024/07/iStock-1281884522.jpg') no-repeat center center fixed !important;
+  background-size: cover !important;
+  position: relative;
+  margin: 0 !important;
+}
+
+body.login-page::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* capa oscura */
+  z-index: -1;
+}

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="product-title">Detalle del Producto - SpaceYisus Shop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f1a;
+            color: #fff;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, #1e3a8a, #9333ea);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ffd700;
+        }
+        .wrap {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+        .product-image {
+            background: #1f2937;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .product-info {
+            color: #e5e7eb;
+        }
+        .product-info h1 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            color: #fff;
+        }
+        .product-meta {
+            margin-bottom: 1rem;
+        }
+        .product-category {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        .product-availability {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        .product-price-container {
+            margin: 1.5rem 0;
+        }
+        .price {
+            font-size: 1.8rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .original-price {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+        .discount-badge {
+            font-size: 1.2rem;
+            color: #9ca3af;
+        }
+        .product-description {
+            margin: 2rem 0;
+            line-height: 1.7;
+        }
+        .product-actions {
+            margin-top: 1rem;
+        }
+        .add-to-cart-btn {
+            background: #9333ea;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .add-to-cart-btn:hover {
+            background: #7e22ce;
+        }
+        .product-shipping {
+            margin-top: 2rem;
+        }
+        .shipping-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .shipping-info i {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+        .shipping-info strong {
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            background: #111827;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+        @media (max-width: 768px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .product-info h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 SpaceYisus Shop</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="#">Catálogo</a>
+            <a href="#">Ofertas</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </header>
+
+    <div class="wrap">
+        <a href="collection.html" class="back-link">← Volver a la colección</a>
+        
+        <div class="product-detail">
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img id="product-image" src="" alt="Imagen del producto" style="max-width: 100%; border-radius: 8px;">
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 id="product-name">Cargando producto...</h1>
+                <div class="product-meta">
+                    <span class="product-category" id="product-category"></span>
+                    <span class="product-availability in-stock" id="product-availability"></span>
+                </div>
+                
+                <div class="product-price-container">
+                    <span class="price" id="product-price"></span>
+                    <span class="original-price" id="original-price"></span>
+                    <span class="discount-badge" id="discount-badge"></span>
+                </div>
+                
+                <div class="product-description">
+                    <h3>Descripción</h3>
+                    <p id="product-description">Cargando descripción...</p>
+                </div>
+                
+                <div class="product-actions">
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                </div>
+                
+                <div class="product-shipping">
+                    <div class="shipping-info">
+                        <i class="fas fa-truck"></i>
+                        <div>
+                            <strong>Envío gratis</strong>
+                            <p>En pedidos superiores a $50.000</p>
+                        </div>
+                    </div>
+                    <div class="shipping-info">
+                        <i class="fas fa-undo"></i>
+                        <div>
+                            <strong>Devoluciones fáciles</strong>
+                            <p>30 días para devoluciones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 SpaceYisus Shop | Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Base de datos de productos (simulada)
+        const products = {
+            'smartwatch-pro-x1': {
+                name: 'Smartwatch Pro X1',
+                price: '1,499,950',
+                originalPrice: '1,999,950',
+                discount: '20%',
+                category: 'Tecnología > Wearables',
+                availability: 'En stock',
+                description: 'El Smartwatch Pro X1 es el compañero perfecto para mantenerte conectado y en forma con su diseño elegante y funciones avanzadas de seguimiento de actividad. Incluye monitoreo de frecuencia cardíaca, GPS integrado y resistencia al agua.',
+                image: 'https://atumano.com.co/wp-content/uploads/2024/01/msg1330939853-11079.jpg'
+            },
+            'cargador-rapido-45w': {
+                name: 'Cargador Rápido 45W',
+                price: '176,900',
+                originalPrice: '226,900',
+                discount: '22%',
+                category: 'Accesorios > Cargadores',
+                availability: 'En stock',
+                description: 'Carga tus dispositivos a máxima velocidad con este cargador rápido de 45W. Compatible con la mayoría de teléfonos inteligentes y tablets del mercado. Incluye cable USB-C de carga rápida.',
+                image: 'https://exitocol.vtexassets.com/arquivos/ids/826867/Cargador-Samsung-45W-USB-Type-C-Fast-Charge-Wall-Charger.jpg?v=637073505765800000'
+            },
+            'nerdminer-v3': {
+                name: 'Nerdminer v3',
+                price: '730,600',
+                category: 'Tecnología > Minería',
+                availability: 'Últimas unidades',
+                description: 'El Nerdminer v3 es un minero de criptomonedas eficiente y silencioso, perfecto para principiantes y expertos en minería. Incluye fuente de alimentación y guía de inicio rápido.',
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5CqjsLilkNh90LOyS9P3DFiYhjmWDty912w&s'
+            },
+            'cargador-laptop-240w': {
+                name: 'Cargador Laptop 240W',
+                price: '1,177,200',
+                originalPrice: '1,499,950',
+                discount: '25%',
+                category: 'Accesorios > Cargadores',
+                availability: 'En stock',
+                description: 'Cargador universal para laptop de 240W con múltiples puntas de conexión. Compatible con la mayoría de marcas y modelos de portátiles. Incluye estuche de transporte.',
+                image: 'https://http2.mlstatic.com/D_NQ_NP_854392-CBT93273726693_092025-O.webp'
+            },
+            'xiaomi-redmi-airdots-2': {
+                name: 'Xiaomi Redmi Airdots 2',
+                price: '233,400',
+                category: 'Audio > Audífonos',
+                availability: 'En stock',
+                description: 'Auriculares inalámbricos True Wireless con sonido de alta calidad y hasta 12 horas de reproducción con el estuche de carga. Control táctil y resistencia al sudor.',
+                image: 'https://exitocol.vtexassets.com/arquivos/ids/10981656/audifonos-xiaomi-redmi-airdots-2.jpg?v=637732193318300000'
+            }
+        };
+
+        // Función para obtener parámetros de la URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Cargar los datos del producto cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            const productId = getUrlParameter('id');
+            const product = products[productId];
+            
+            if (product) {
+                // Actualizar la información del producto
+                document.getElementById('product-name').textContent = product.name;
+                document.getElementById('product-price').textContent = `$${product.price} COP`;
+                document.getElementById('product-category').textContent = product.category;
+                document.getElementById('product-availability').textContent = product.availability;
+                document.getElementById('product-description').textContent = product.description;
+                document.getElementById('product-image').src = product.image;
+                document.getElementById('product-image').alt = product.name;
+                document.title = `${product.name} | SpaceYisus Shop`;
+                
+                // Mostrar precio original y descuento si están disponibles
+                const originalPriceEl = document.getElementById('original-price');
+                const discountBadgeEl = document.getElementById('discount-badge');
+                
+                if (product.originalPrice) {
+                    originalPriceEl.textContent = `$${product.originalPrice} COP`;
+                    originalPriceEl.style.display = 'inline';
+                    
+                    if (product.discount) {
+                        discountBadgeEl.textContent = ` ${product.discount} OFF`;
+                        discountBadgeEl.style.display = 'inline';
+                    }
+                } else {
+                    originalPriceEl.style.display = 'none';
+                    discountBadgeEl.style.display = 'none';
+                }
+                
+                // Configurar el botón de añadir al carrito
+                document.querySelector('.add-to-cart-btn').addEventListener('click', function() {
+                    alert(`¡${product.name} ha sido añadido al carrito!`);
+                    // Aquí iría la lógica para añadir al carrito
+                });
+            } else {
+                // Producto no encontrado
+                document.querySelector('.product-detail').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0;">
+                        <h2>Producto no encontrado</h2>
+                        <p>Lo sentimos, el producto que buscas no está disponible.</p>
+                        <a href="collection.html" class="back-link" style="display: inline-block; margin-top: 1rem;">
+                            ← Volver a la tienda
+                        </a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

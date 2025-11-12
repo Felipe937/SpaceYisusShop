@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tienda oficial de SpaceYisus - Productos tecnológicos de última generación">
+    <title>SpaceYisus Shop | Tecnología y más</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --primary-light: #a78bfa;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-light: #334155;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --error: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #7e22ce 100%);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 0.75rem 5%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            margin-right: 0.75rem;
+        }
+        
+        .logo-text {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .cart-count {
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 8rem 2rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 27, 75, 0.95)), 
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80') center/cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.5) 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(to right, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(147, 51, 234, 0.5);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* FEATURED SECTION */
+        .featured {
+            padding: 5rem 5%;
+            background: var(--background);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* PRODUCTS GRID */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* PRODUCT CARD */
+        .product-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .product-card {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid var(--surface-light);
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary);
+        }
+
+        .product-image {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        
+        .product-image img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-badge.new {
+            background: var(--success);
+            color: white;
+        }
+
+        .product-badge.sale {
+            background: var(--error);
+            color: white;
+        }
+
+        .product-badge:not(.new):not(.sale) {
+            background: var(--primary);
+            color: white;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.8em;
+        }
+
+        .product-price {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .current-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .original-price {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--warning);
+            font-size: 0.9rem;
+        }
+
+        .rating-count {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-left: 0.5rem;
+        }
+
+        .product-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: var(--surface-light);
+            color: var(--text);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-add-to-cart {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: var(--surface);
+            padding: 4rem 5% 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 3fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--surface-light);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            color: var(--text);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .contact-info i {
+            margin-right: 0.75rem;
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .footer-legal a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--primary-light);
+        }
+
+        /* BACK TO TOP */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px) !important;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                gap: 0.25rem;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .footer-links {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 5rem 1rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">🚀</span>
+                <h1 class="logo-text">SpaceYisus</h1>
+            </a>
+            <nav class="nav-links">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="collection.html" class="nav-link">
+                    <i class="fas fa-box"></i>
+                    <span>Productos</span>
+                </a>
+                <a href="contact.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contacto</span>
+                </a>
+                <a href="cart.html" class="nav-link" style="position: relative;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Carrito</span>
+                    <span class="cart-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Bienvenido a SpaceYisus Shop</h2>
+            <p>Tu tienda de importaciones con productos de otro mundo 🌌</p>
+            <a href="collection.html" class="cta-button">Explorar productos</a>
+        </div>
+    </section>
+
+    <section id="featured" class="featured">
+        <div class="section-header">
+            <h2 class="section-title">Productos Destacados</h2>
+            <div class="section-divider"></div>
+        </div>
+        
+        <div class="products-grid">
+            <!-- Producto 1 -->
+            <a href="product.html?id=smartwatch-pro-x1" class="product-link">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://atumano.com.co/wp-content/uploads/2024/01/msg1330939853-11079.jpg" alt="Smartwatch Pro X1">
+                        <div class="product-badge new">Nuevo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Smartwatch Pro X1</h3>
+                        <div class="product-price">
+                            <span class="current-price">$1,499,950</span>
+                            <span class="original-price">$1,999,950</span>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="rating-count">(215)</span>
+                        </div>
+                        <p>El Smartwatch Pro X1 es el compañero perfecto para mantenerte conectado y en forma con su diseño elegante y funciones avanzadas de seguimiento de actividad.</p>
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Producto 2 -->
+            <a href="product.html?id=cargador-rapido-45w" class="product-link">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://exitocol.vtexassets.com/arquivos/ids/826867/Cargador-Samsung-45W-USB-Type-C-Fast-Charge-Wall-Charger.jpg?v=637073505765800000" alt="Cargador Rápido 45W">
+                        <div class="product-badge sale">-22%</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Cargador Rápido 45W</h3>
+                        <div class="product-price">
+                            <span class="current-price">$176,900</span>
+                            <span class="original-price">$226,900</span>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span class="rating-count">(89)</span>
+                        </div>
+                        <p>Carga tus dispositivos a máxima velocidad con este cargador rápido de 45W. Compatible con la mayoría de teléfonos inteligentes y tablets del mercado.</p>
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Producto 3 -->
+            <a href="product.html?id=nerdminer-v3" class="product-link">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://ae01.alicdn.com/kf/S38202af44dfb47a7b890f2389dda1e81a.jpg" alt="Nerdminer v3">
+                        <div class="product-badge">Popular</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Nerdminer v3</h3>
+                        <div class="product-price">
+                            <span class="current-price">$730,600</span>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="rating-count">(215)</span>
+                        </div>
+                        <p>El Nerdminer v3 es un minero de criptomonedas eficiente y silencioso, perfecto para principiantes y expertos en minería.</p>
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Producto 4 -->
+            <a href="product.html?id=cargador-laptop-240w" class="product-link">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://http2.mlstatic.com/D_NQ_NP_854392-CBT93273726693_092025-O.webp" alt="Cargador Laptop 240W">
+                        <div class="product-badge sale">Oferta</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Cargador Laptop 240W</h3>
+                        <div class="product-price">
+                            <span class="current-price">$1,177,200</span>
+                            <span class="original-price">$1,499,950</span>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="rating-count">(42)</span>
+                        </div>
+                        <p>Cargador universal para laptop de 240W con múltiples puntas de conexión. Compatible con la mayoría de marcas y modelos de portátiles.</p>
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Productos 5-8 (Xiaomi Airdots) -->
+            <a href="product.html?id=xiaomi-redmi-airdots-2" class="product-link">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://exitocol.vtexassets.com/arquivos/ids/10981656/audifonos-xiaomi-redmi-airdots-2.jpg?v=637732193318300000" alt="Xiaomi Redmi Airdots 2">
+                    </div>
+                    <div class="product-info">
+                        <h3>Xiaomi Redmi Airdots 2</h3>
+                        <div class="product-price">
+                            <span class="current-price">$233,400</span>
+                        </div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="rating-count">(152)</span>
+                        </div>
+                        <p>Auriculares inalámbricos True Wireless con sonido de alta calidad y hasta 12 horas de reproducción con el estuche de carga.</p>
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </button>
+                    </div>
+                </div>
+            </a>
+
+            <a href="product.html?id=xiaomi-redmi-airdots-2" class="product-link">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://exitocol.vtexassets.com/arquivos/ids/10981656/audifonos-xiaomi-redmi-airdots-2.jpg?v=637732193318300000" alt="Xiaomi Redmi Airdots 2">
+                    <h3 class="product-title">Xiaomi Redmi Airdots 2</h3>
+                    <div class="product-price">
+                        <span class="current-price">$46.68</span>
+                    </div>
+                    <div class="product-rating">
+                        ★★★★★ <span class="rating-count">(152)</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-icon">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="btn-add-to-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Añadir</span>
+                        </button>
+                    </div>
+                </div>
+            </div>

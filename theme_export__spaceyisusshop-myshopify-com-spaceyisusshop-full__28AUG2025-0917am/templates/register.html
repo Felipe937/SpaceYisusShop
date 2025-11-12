@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - SpaceYisus Shop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f1a;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: linear-gradient(90deg, #1e3a8a, #9333ea);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ffd700;
+        }
+        .auth-page {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: url('https://www.gureakdatapost.com/wp-content/uploads/2024/07/iStock-1281884522.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+        .auth-page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 15, 26, 0.9);
+            z-index: 0;
+        }
+        .auth-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.6s ease-out;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-header h2 {
+            font-size: 2rem;
+            margin: 0 0 0.5rem;
+            color: #fff;
+        }
+        .auth-header p {
+            color: #d1d5db;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #e5e7eb;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid #374151;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #9333ea;
+            box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.3);
+            background: rgba(17, 24, 39, 0.9);
+        }
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        .auth-footer a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .auth-footer a:hover {
+            color: #8b5cf6;
+            text-decoration: underline;
+        }
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        .strength-bar {
+            height: 4px;
+            background: #374151;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        .strength-level {
+            height: 100%;
+            width: 0%;
+            background: #ef4444;
+            transition: all 0.3s ease;
+        }
+        .form-message {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fecaca;
+        }
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #bbf7d0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 640px) {
+            .auth-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 1.25rem;
+            }
+            .auth-header h2 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 SpaceYisus Shop</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="collection.html">Catálogo</a>
+            <a href="#">Ofertas</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </header>
+
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Crear Cuenta</h2>
+                <p>Únete a SpaceYisus y descubre productos increíbles</p>
+            </div>
+
+            <form id="register-form">
+                <div id="form-messages" class="form-message" role="alert"></div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">Nombre</label>
+                        <input type="text" id="first-name" class="form-control" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last-name">Apellido</label>
+                        <input type="text" id="last-name" class="form-control" placeholder="Tu apellido" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" class="form-control" placeholder="tucorreo@ejemplo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Teléfono (opcional)</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="+57 300 123 4567">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" minlength="6" required>
+                    <div class="strength-bar">
+                        <div class="strength-level" id="strength-level"></div>
+                    </div>
+                    <div class="password-strength" id="password-hint">Usa 6 o más caracteres con una combinación de letras, números y símbolos</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar contraseña</label>
+                    <input type="password" id="confirm-password" class="form-control" placeholder="••••••••" required>
+                    <div class="password-strength" id="password-match"></div>
+                </div>
+
+                <button type="submit" class="btn">Crear cuenta</button>
+            </form>
+
+            <div class="auth-footer">
+                ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background: #111827; text-align: center; padding: 1.5rem; margin-top: auto;">
+        <p>© 2025 SpaceYisus Shop | Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('register-form');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm-password');
+            const strengthLevel = document.getElementById('strength-level');
+            const passwordHint = document.getElementById('password-hint');
+            const passwordMatch = document.getElementById('password-match');
+            const formMessages = document.getElementById('form-messages');
+
+            // Validación de fortaleza de contraseña
+            password.addEventListener('input', function() {
+                const value = password.value;
+                let strength = 0;
+                let hint = '';
+
+                // Longitud mínima
+                if (value.length >= 6) strength += 20;
+                
+                // Contiene números
+                if (/\d/.test(value)) strength += 20;
+                
+                // Contiene letras minúsculas
+                if (/[a-z]/.test(value)) strength += 20;
+                
+                // Contiene letras mayúsculas
+                if (/[A-Z]/.test(value)) strength += 20;
+                
+                // Contiene caracteres especiales
+                if (/[^A-Za-z0-9]/.test(value)) strength += 20;
+
+                // Actualizar barra de fortaleza
+                strengthLevel.style.width = strength + '%';
+                
+                // Actualizar color y mensaje según la fortaleza
+                if (strength < 40) {
+                    strengthLevel.style.background = '#ef4444';
+                    hint = 'Contraseña débil';
+                } else if (strength < 80) {
+                    strengthLevel.style.background = '#f59e0b';
+                    hint = 'Contraseña moderada';
+                } else {
+                    strengthLevel.style.background = '#10b981';
+                    hint = 'Contraseña fuerte';
+                }
+                
+                passwordHint.textContent = hint;
+                checkPasswordMatch();
+            });
+
+            // Validación de coincidencia de contraseñas
+            function checkPasswordMatch() {
+                if (confirmPassword.value) {
+                    if (password.value !== confirmPassword.value) {
+                        passwordMatch.textContent = 'Las contraseñas no coinciden';
+                        passwordMatch.style.color = '#f87171';
+                        return false;
+                    } else {
+                        passwordMatch.textContent = 'Las contraseñas coinciden';
+                        passwordMatch.style.color = '#6ee7b7';
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            confirmPassword.addEventListener('input', checkPasswordMatch);
+
+            // Manejo del envío del formulario
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validación básica del formulario
+                if (!checkPasswordMatch()) {
+                    showMessage('Por favor, asegúrate de que las contraseñas coincidan.', 'error');
+                    return;
+                }
+
+                // Aquí iría la lógica de envío del formulario
+                // Por ahora, mostramos un mensaje de éxito
+                showMessage('¡Registro exitoso! Redirigiendo...', 'success');
+                
+                // Redirigir después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            });
+
+            // Función para mostrar mensajes
+            function showMessage(message, type) {
+                formMessages.textContent = message;
+                formMessages.className = 'form-message ' + type + '-message';
+                formMessages.style.display = 'block';
+                
+                // Desplazarse al mensaje
+                formMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Ocultar el mensaje después de 5 segundos (excepto para mensajes de éxito)
+                if (type !== 'success') {
+                    setTimeout(() => {
+                        formMessages.style.opacity = '0';
+                        setTimeout(() => {
+                            formMessages.style.display = 'none';
+                            formMessages.style.opacity = '1';
+                        }, 300);
+                    }, 5000);
+                }
+            }
+
+            // Efecto de hover en los inputs
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
