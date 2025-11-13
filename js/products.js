@@ -24,15 +24,24 @@ export class ProductService {
       };
 
       // 1️⃣ Intentar búsqueda exacta
-      const { data: exactMatch, error: exactError } = await supabase
-        .from('products')
-        .select('*')
-        .eq('slug', productId)
-        .single();
+      console.log('🔍 Buscando producto con slug exacto:', productId);
+      try {
+        const { data: exactMatch, error: exactError } = await supabase
+          .from('products')
+          .select('*')
+          .eq('slug', productId)
+          .single();
 
-      if (!exactError && exactMatch) {
-        console.log('✅ Producto encontrado por slug exacto:', exactMatch.name);
-        return exactMatch;
+        if (exactError) {
+          console.warn('⚠️ Error en búsqueda exacta:', exactError);
+        } else if (exactMatch) {
+          console.log('✅ Producto encontrado por slug exacto:', exactMatch.name);
+          return exactMatch;
+        } else {
+          console.log('ℹ️ No se encontró el producto por slug exacto');
+        }
+      } catch (error) {
+        console.error('💥 Error en búsqueda exacta:', error);
       }
 
       // 2️⃣ Normalizar slug (sin tildes)
@@ -113,25 +122,55 @@ export class ProductService {
         return [];
       }
 
-      const baseQuery = supabase.from('products').select('*').neq('id', excludeId);
+      console.log('🔍 Buscando productos con ID distinto a:', excludeId);
+      
+      // Primero, obtener el producto actual para obtener su categoría si existe
+      const { data: currentProduct } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', excludeId)
+        .single();
 
-      // Buscar por palabras clave en el nombre
-      if (productName) {
+      let query = supabase
+        .from('products')
+        .select('*')
+        .neq('id', excludeId);
+
+      // Si el producto actual tiene categoría, filtrar por ella
+      if (currentProduct?.category) {
+        console.log(`🔍 Buscando productos en la categoría: ${currentProduct.category}`);
+        query = query.eq('category', currentProduct.category);
+      } else if (productName) {
+        // Si no hay categoría, buscar por palabras clave en el nombre
         const keywords = productName.split(/\s+/).filter(w => w.length > 3);
         if (keywords.length > 0) {
           const orQuery = keywords.map(w => `name.ilike.%${w}%`).join(',');
-          const { data: related } = await baseQuery.or(orQuery).limit(limit);
-          if (related?.length > 0) {
-            console.log(`✅ ${related.length} productos relacionados encontrados`);
-            return related;
-          }
+          console.log('🔍 Buscando por palabras clave:', keywords);
+          query = query.or(orQuery);
         }
       }
 
-      // Fallback: productos aleatorios
-      const { data: random } = await baseQuery.order('created_at', { ascending: false }).limit(limit);
-      console.log(`ℹ️ Mostrando ${random?.length || 0} productos aleatorios`);
-      return random || [];
+      // Aplicar límite y ordenar por fecha de creación
+      const { data: related, error } = await query
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        console.warn('⚠️ Error al buscar productos relacionados:', error);
+        // Si hay error, devolver productos aleatorios
+        const { data: random } = await supabase
+          .from('products')
+          .select('*')
+          .neq('id', excludeId)
+          .order('created_at', { ascending: false })
+          .limit(limit);
+        
+        console.log(`ℹ️ Mostrando ${random?.length || 0} productos aleatorios`);
+        return random || [];
+      }
+
+      console.log(`✅ Encontrados ${related?.length || 0} productos relacionados`);
+      return related || [];
     } catch (error) {
       console.error('💥 Error en getRelatedProducts:', error);
       return [];

@@ -35,44 +35,81 @@
   </footer>
 
   <script type="module">
-    import { ProductService } from './services/product.js'
+    import { ProductService } from './js/products.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
-      console.log('📄 Página cargada, buscando producto...')
+      console.log('📄 Página cargada, buscando producto...');
 
-      const url = new URL(window.location.href)
-      console.log('🌐 URL completa:', url.href)
+      const url = new URL(window.location.href);
+      console.log('🌐 URL completa:', url.href);
 
       // 🔎 Intentar primero con ?id=
-      let productId = url.searchParams.get('id')
+      let productId = url.searchParams.get('id');
 
       // 🧩 Si no hay ?id=, obtener el último segmento del path
       if (!productId) {
-        const pathParts = window.location.pathname.split('/')
-        productId = pathParts.pop() || pathParts.pop() // último segmento no vacío
+        const pathParts = window.location.pathname.split('/');
+        productId = pathParts.pop() || pathParts.pop(); // último segmento no vacío
       }
 
-      console.log('🆔 Identificador del producto de la URL:', productId)
+      console.log('🆔 Identificador del producto de la URL:', productId);
 
       if (!productId) {
-        console.error('❌ No se proporcionó un identificador de producto en la URL')
+        console.error('❌ No se proporcionó un identificador de producto en la URL');
         document.getElementById('product-detail').innerHTML = `
-          <p class="error">No se encontró el producto solicitado.</p>
-        `
-        return
+          <div class="error">
+            <h2>Producto no encontrado</h2>
+            <p>Lo sentimos, no pudimos encontrar el producto solicitado.</p>
+            <a href="/" class="back-link">← Volver a la tienda</a>
+          </div>
+        `;
+        return;
       }
 
-      try {
-        const product = await ProductService.getProductById(productId)
-        if (!product) throw new Error('Producto no encontrado')
+      // Mostrar indicador de carga
+      const productDetail = document.getElementById('product-detail');
+      productDetail.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Cargando producto...</p>
+        </div>
+      `;
 
-        console.log('✅ Producto cargado:', product.name)
+      try {
+        console.log('🔍 Buscando producto con ID:', productId);
+        const product = await ProductService.getProductById(productId);
+        
+        if (!product) {
+          throw new Error('Producto no encontrado');
+        }
+
+        console.log('✅ Producto cargado:', product);
 
         // Rellenar los datos en el HTML
-        document.getElementById('product-image').src = product.image_url || ''
-        document.getElementById('product-name').textContent = product.name
-        document.getElementById('product-description').textContent = product.description
-        document.getElementById('product-price').textContent = `$${Number(product.price).toLocaleString('es-CO')}`
+        const productImage = document.getElementById('product-image');
+        const productName = document.getElementById('product-name');
+        const productDescription = document.getElementById('product-description');
+        const productPrice = document.getElementById('product-price');
+
+        // Actualizar la imagen
+        if (product.image_url) {
+          productImage.src = product.image_url;
+          productImage.alt = product.name || 'Imagen del producto';
+          productImage.style.display = 'block';
+        } else {
+          productImage.style.display = 'none';
+        }
+
+        // Actualizar el resto de la información
+        productName.textContent = product.name || 'Producto sin nombre';
+        productDescription.textContent = product.description || 'Sin descripción disponible';
+        
+        // Formatear el precio
+        if (product.price) {
+          productPrice.textContent = `$${Number(product.price).toLocaleString('es-CO')}`;
+        } else {
+          productPrice.textContent = 'Precio no disponible';
+        }
 
         // Cargar productos relacionados
         const related = await ProductService.getRelatedProducts(null, product.id, product.name, 4)
