@@ -148,22 +148,10 @@ export class ProductService {
         .select('*')
         .neq('id', excludeId);
 
-      // 1. Primero intentar por categoría si está definida
-      if (category && category !== 'undefined' && category !== 'null' && category !== '') {
-        console.log(`🔍 Buscando productos en la categoría: ${category}`);
-        const { data: categoryProducts, error: categoryError } = await query
-          .eq('category', category)
-          .limit(limit);
-
-        if (!categoryError && categoryProducts && categoryProducts.length > 0) {
-          console.log(`✅ Encontrados ${categoryProducts.length} productos en la misma categoría`);
-          return categoryProducts;
-        }
-      } else {
-        console.log('ℹ️ No se proporcionó una categoría válida, buscando por nombre del producto');
-      }
+      // Saltar la búsqueda por categoría ya que la columna no existe
+      console.log('ℹ️ Búsqueda por categoría deshabilitada, buscando por nombre del producto');
       
-      // 2. Si no hay categoría o no se encontraron productos, buscar por palabras clave del nombre
+      // Buscar por palabras clave del nombre
       if (productName) {
         console.log('🔍 Buscando productos similares por nombre:', productName);
         
@@ -185,7 +173,7 @@ export class ProductService {
         }
       }
       
-      // 3. Si no se encontraron productos por categoría o nombre, obtener productos aleatorios
+      // Si no se encontraron productos por nombre, obtener productos aleatorios
       console.log('ℹ️ Mostrando productos aleatorios');
       
       // Usar una consulta aleatoria con un rango de IDs para mejorar el rendimiento
@@ -203,7 +191,7 @@ export class ProductService {
 
       console.log(`✅ Encontrados ${randomProducts?.length || 0} productos aleatorios`);
       return randomProducts || [];
-    } catch (error) {
+z    } catch (error) {
       console.error('💥 Error en getRelatedProducts:', error);
       return [];
     }
