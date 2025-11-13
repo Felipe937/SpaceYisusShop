@@ -2,6 +2,19 @@ console.log("SpaceYisus Shop theme loaded");
 
 import { supabase } from './supabase.js';
 
+// Test database connection
+async function checkDB() {
+  const { data, error } = await supabase.from('users').select('*');
+  if (error) {
+    console.error('❌ Error conectando a la base de datos:', error.message);
+  } else {
+    console.log('✅ Conexión exitosa a Supabase. Registros:', data);
+  }
+}
+
+// Run the connection test
+checkDB();
+
 // 🔹 Registro
 async function registerUser(email, password) {
   const { data, error } = await supabase.auth.signUp({
