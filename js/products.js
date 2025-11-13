@@ -69,17 +69,18 @@ export class ProductService {
 
   static async getRelatedProducts(category, excludeId, productName, limit = 4) {
     try {
-      console.log('🔍 Buscando productos relacionados para:', category || 'sin categoría');
+      console.log('🔍 Buscando productos relacionados para:', productName || 'producto sin nombre');
       
-      // Si no hay categoría, buscar por palabras clave del nombre
-      if (!category && productName) {
+      // Buscar productos con palabras clave del nombre
+      if (productName) {
         console.log('🔍 Buscando productos similares por nombre:', productName);
-        // Extraer palabras clave del nombre del producto
+        
+        // Extraer palabras clave del nombre del producto (palabras de más de 3 letras)
         const keywords = productName.split(/\s+/).filter(word => word.length > 3);
         
         if (keywords.length > 0) {
           // Crear una consulta OR para cada palabra clave
-          let orQuery = keywords.map(word => `name.ilike.%${word}%`).join(',');
+          const orQuery = keywords.map(word => `name.ilike.%${word}%`).join(',');
           
           const { data, error } = await supabase
             .from('products')
@@ -95,28 +96,22 @@ export class ProductService {
         }
       }
       
-      // Si hay categoría o no se encontraron productos por nombre, usar la lógica normal
-      let query = supabase
+      // Si no se encontraron productos por nombre, obtener productos aleatorios
+      console.log('ℹ️ Mostrando productos aleatorios');
+      
+      const { data: relatedProducts, error } = await supabase
         .from('products')
         .select('*')
-        .neq('id', excludeId);
-      
-      if (category) {
-        query = query.eq('category', category);
-      } else {
-        console.log('ℹ️ Mostrando productos aleatorios');
-        // Ordenar por ID descendente (últimos productos)
-        query = query.order('id', { ascending: false });
-      }
-      
-      const { data: relatedProducts, error } = await query.limit(limit);
+        .neq('id', excludeId)
+        .order('id', { ascending: false })
+        .limit(limit);
 
       if (error) {
         console.error('⚠️ Error al obtener productos relacionados:', error);
         throw error;
       }
 
-      console.log(`✅ Encontrados ${relatedProducts?.length || 0} productos relacionados`);
+      console.log(`✅ Encontrados ${relatedProducts?.length || 0} productos`);
       return relatedProducts || [];
     } catch (error) {
       console.error('💥 Error en getRelatedProducts:', error);
