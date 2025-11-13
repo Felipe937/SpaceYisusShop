@@ -22,15 +22,15 @@ export class ProductService {
         'smartwatch-pro-x1': ['smartwatch-pro-x1']
       };
 
-      // 1️⃣ Primero intentar búsqueda exacta por ID
+      // 1️⃣ Primero intentar búsqueda exacta por slug
       const { data: exactMatch, error: exactError } = await supabase
         .from('products')
         .select('*')
-        .eq('id', productId)
+        .eq('slug', productId)
         .single();
 
       if (!exactError && exactMatch) {
-        console.log('✅ Producto encontrado por ID exacto:', exactMatch.name);
+        console.log('✅ Producto encontrado por slug exacto:', exactMatch.name);
         return exactMatch;
       }
 
