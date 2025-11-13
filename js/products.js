@@ -4,137 +4,83 @@ export class ProductService {
     static async getProductById(productId) {
         try {
             if (!productId) {
-                console.error('No se proporcionó un ID de producto');
+                console.error('❌ No se proporcionó un ID de producto');
                 return null;
             }
 
-            console.log('Buscando producto con ID:', productId);
-            
+            console.log('🔍 Buscando producto con identificador:', productId);
+
             let product = null;
-            let error = null;
+
+            // 1️⃣ Intentar búsqueda directa por slug (insensible a mayúsculas y acentos)
+            const normalizedSearch = productId.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            console.log('🔍 Búsqueda normalizada:', normalizedSearch);
             
-            // Función auxiliar para buscar por ID o slug
-            const searchProduct = async (identifier) => {
-                try {
-                    // Primero intentamos buscar por slug
-                    let { data, error } = await supabase
-                        .from('products')
-                        .select('*')
-                        .or(`slug.eq.${identifier}`)
-                        .limit(1);
-                    
-                    if (error) {
-                        console.error('Error en búsqueda por slug:', error);
-                        throw error;
-                    }
-                    
-                    // Si no encontramos, intentamos buscar por ID
-                    if (!data || data.length === 0) {
-                        console.log('No se encontró por slug, intentando por ID...');
-                        const { data: idData, error: idError } = await supabase
-                            .from('products')
-                            .select('*')
-                            .eq('id', identifier)
-                            .limit(1);
-                        
-                        if (idError) {
-                            console.error('Error en búsqueda por ID:', idError);
-                            throw idError;
-                        }
-                        
-                        if (idData && idData.length > 0) {
-                            console.log('Producto encontrado por ID:', idData[0].name);
-                            return idData[0];
-                        }
-                        
-                        // Si aún no encontramos, intentamos por nombre
-                        console.log('No se encontró por ID, intentando por nombre...');
-                        const searchTerm = identifier.replace(/-/g, ' ');
-                        const { data: searchData, error: searchError } = await supabase
-                            .from('products')
-                            .select('*')
-                            .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
-                            .limit(1);
-                        
-                        if (searchError) {
-                            console.error('Error en búsqueda por nombre:', searchError);
-                            throw searchError;
-                        }
-                        
-                        if (searchData && searchData.length > 0) {
-                            console.log('Producto encontrado por nombre:', searchData[0].name);
-                            return searchData[0];
-                        }
-                    } else {
-                        console.log('Producto encontrado por slug:', data[0].name);
-                        return data[0];
-                    }
-                    
-                    return data && data.length > 0 ? data[0] : null;
-                } catch (e) {
-                    console.error('Error en búsqueda de producto:', e);
-                    return null;
-                }
-            };
-            
-            // 1. Intentar búsqueda directa por ID o slug
-            product = await searchProduct(productId);
-            
-            // 2. Si no se encuentra, intentar con formato modificado (reemplazar guiones por espacios)
-            if (!product && productId.includes('-')) {
-                console.log('Producto no encontrado, intentando con formato modificado...');
-                const modifiedId = productId.replace(/-/g, ' ');
-                product = await searchProduct(modifiedId);
+            const { data: directData, error: directError } = await supabase
+                .from('products')
+                .select('*')
+                .ilike('slug', `%${normalizedSearch}%`)
+                .limit(1)
+                .maybeSingle();
+
+            if (directError) {
+                console.error('⚠️ Error al buscar por slug:', directError);
+                throw directError;
             }
 
-            // 3. Si aún no encontramos el producto, intentamos buscar por nombre
-            if (!product) {
-                console.log('Buscando por nombre...');
-                const searchTerm = productId.replace(/-/g, ' ');
-                console.log('Término de búsqueda:', searchTerm);
+            if (directData) {
+                console.log('✅ Producto encontrado por búsqueda flexible:', directData.name);
+                return directData;
+            }
+            
+            // 2️⃣ Si no se encuentra, intentar por ID exacto
+            const { data: byIdData, error: idError } = await supabase
+                .from('products')
+                .select('*')
+                .eq('id', productId)
+                .maybeSingle();
                 
-                try {
-                    const { data, error: nameError } = await supabase
-                        .from('products')
-                        .select('*')
-                        .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
-                        .limit(1);
-                    
-                    if (nameError) throw nameError;
-                    
-                    if (data && data.length > 0) {
-                        console.log('Producto encontrado por nombre:', data[0]);
-                        product = data[0];
-                    }
-                } catch (e) {
-                    console.error('Error en búsqueda por nombre:', e);
-                }
+            if (byIdData) {
+                console.log('✅ Producto encontrado por ID exacto:', byIdData.name);
+                return byIdData;
             }
 
-            if (!product) {
-                console.error('No se encontró el producto con ID o nombre:', productId);
-                // Intentar una búsqueda más amplia como último recurso
-                try {
-                    const { data } = await supabase
-                        .from('products')
-                        .select('*')
-                        .limit(1);
-                    
-                    if (data && data.length > 0) {
-                        console.warn('No se encontró el producto específico, mostrando un producto aleatorio');
-                        return data[0];
-                    }
-                } catch (e) {
-                    console.error('Error en búsqueda de respaldo:', e);
-                }
-                
-                throw new Error('No se encontró el producto solicitado');
+            // 3️⃣ Búsqueda flexible por nombre/descripción (insensible a acentos)
+            const searchTerm = productId.replace(/-/g, ' ').trim();
+            const normalizedSearchTerm = searchTerm.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+            console.log('🪄 Búsqueda flexible con término:', normalizedSearchTerm);
+
+            const { data: nameData, error: nameError } = await supabase.rpc('search_products', {
+                search_term: `%${normalizedSearchTerm}%`
+            });
+
+            if (nameError) {
+                console.error('⚠️ Error al buscar por nombre/descripcion:', nameError);
+                throw nameError;
             }
 
-            console.log('Producto encontrado:', product);
-            return product;
+            if (nameData) {
+                console.log('✅ Producto encontrado por nombre/descripcion:', nameData.name);
+                return nameData;
+            }
+
+            // 3️⃣ Último recurso: devolver un producto aleatorio
+            console.warn('⚠️ No se encontró el producto, devolviendo uno aleatorio como respaldo...');
+            const { data: fallback } = await supabase
+                .from('products')
+                .select('*')
+                .limit(1)
+                .maybeSingle();
+
+            if (fallback) {
+                console.log('🎲 Mostrando producto de respaldo:', fallback.name);
+                return fallback;
+            }
+
+            throw new Error('No se encontró el producto solicitado');
         } catch (error) {
-            console.error('Error al obtener el producto:', error);
+            console.error('💥 Error al obtener el producto:', error);
             return null;
         }
     }
@@ -149,12 +95,13 @@ export class ProductService {
                 .limit(limit);
 
             if (error) {
-                console.error('Error al obtener productos relacionados:', error);
+                console.error('⚠️ Error al obtener productos relacionados:', error);
                 throw error;
             }
+
             return relatedProducts || [];
         } catch (error) {
-            console.error('Error en getRelatedProducts:', error);
+            console.error('💥 Error en getRelatedProducts:', error);
             return [];
         }
     }
