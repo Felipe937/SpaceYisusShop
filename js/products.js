@@ -20,13 +20,35 @@ export class ProductService {
                     let { data, error } = await supabase
                         .from('products')
                         .select('*')
-                        .or(`slug.eq.${identifier},id.eq.${identifier}`)
+                        .or(`slug.eq.${identifier}`)
                         .limit(1);
                     
-                    if (error) throw error;
+                    if (error) {
+                        console.error('Error en búsqueda por slug:', error);
+                        throw error;
+                    }
                     
-                    // Si no encontramos, intentamos una búsqueda más flexible por nombre
+                    // Si no encontramos, intentamos buscar por ID
                     if (!data || data.length === 0) {
+                        console.log('No se encontró por slug, intentando por ID...');
+                        const { data: idData, error: idError } = await supabase
+                            .from('products')
+                            .select('*')
+                            .eq('id', identifier)
+                            .limit(1);
+                        
+                        if (idError) {
+                            console.error('Error en búsqueda por ID:', idError);
+                            throw idError;
+                        }
+                        
+                        if (idData && idData.length > 0) {
+                            console.log('Producto encontrado por ID:', idData[0].name);
+                            return idData[0];
+                        }
+                        
+                        // Si aún no encontramos, intentamos por nombre
+                        console.log('No se encontró por ID, intentando por nombre...');
                         const searchTerm = identifier.replace(/-/g, ' ');
                         const { data: searchData, error: searchError } = await supabase
                             .from('products')
@@ -34,8 +56,18 @@ export class ProductService {
                             .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
                             .limit(1);
                         
-                        if (searchError) throw searchError;
-                        return searchData && searchData.length > 0 ? searchData[0] : null;
+                        if (searchError) {
+                            console.error('Error en búsqueda por nombre:', searchError);
+                            throw searchError;
+                        }
+                        
+                        if (searchData && searchData.length > 0) {
+                            console.log('Producto encontrado por nombre:', searchData[0].name);
+                            return searchData[0];
+                        }
+                    } else {
+                        console.log('Producto encontrado por slug:', data[0].name);
+                        return data[0];
                     }
                     
                     return data && data.length > 0 ? data[0] : null;
