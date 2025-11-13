@@ -692,7 +692,8 @@
                 updatePrice();
                 
                 // Cargar productos relacionados, usando el nombre si no hay categoría
-                loadRelatedProducts(product.category, product.id, product.name);
+                const category = product.category || ''; // Asegurar que category no sea undefined
+                loadRelatedProducts(category, product.id, product.name);
                 
             } catch (error) {
                 console.error('Error al cargar el producto:', error);
@@ -701,22 +702,37 @@
         }
 
         // Cargar productos relacionados
-        async function loadRelatedProducts(category, excludeId) {
+        async function loadRelatedProducts(category, excludeId, productName) {
             try {
-                const relatedProducts = await ProductService.getRelatedProducts(category, excludeId);
                 const relatedContainer = document.querySelector('.related-products');
+                if (!relatedContainer) return;
                 
-                if (!relatedContainer || !relatedProducts.length) return;
+                // Mostrar indicador de carga
+                relatedContainer.innerHTML = '<div class="loading">Cargando productos relacionados...</div>';
+                
+                // Obtener productos relacionados
+                const relatedProducts = await ProductService.getRelatedProducts(category, excludeId, productName);
+                
+                if (!relatedProducts || relatedProducts.length === 0) {
+                    relatedContainer.innerHTML = '';
+                    return;
+                }
                 
                 let html = '<h2>Productos Relacionados</h2><div class="related-products-grid">';
                 
                 relatedProducts.forEach(product => {
+                    if (!product) return;
+                    
+                    const price = product.price ? `$${product.price.toLocaleString()}` : 'Precio no disponible';
+                    const imageUrl = product.images?.[0] || 'https://via.placeholder.com/300';
+                    const productName = product.name || 'Producto sin nombre';
+                    
                     html += `
                         <div class="product-card">
                             <a href="producto.html?id=${product.id}">
-                                <img src="${product.images?.[0] || 'https://via.placeholder.com/300'}" alt="${product.name}">
-                                <h3>${product.name}</h3>
-                                <p class="price">$${product.price.toLocaleString()}</p>
+                                <img src="${imageUrl}" alt="${productName}" onerror="this.src='https://via.placeholder.com/300';">
+                                <h3>${productName}</h3>
+                                <p class="price">${price}</p>
                             </a>
                         </div>
                     `;
@@ -727,6 +743,10 @@
                 
             } catch (error) {
                 console.error('Error al cargar productos relacionados:', error);
+                const relatedContainer = document.querySelector('.related-products');
+                if (relatedContainer) {
+                    relatedContainer.innerHTML = '';
+                }
             }
         }
 
