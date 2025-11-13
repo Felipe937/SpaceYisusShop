@@ -149,7 +149,7 @@ export class ProductService {
         .neq('id', excludeId);
 
       // 1. Primero intentar por categoría si está definida
-      if (category && category !== 'undefined') {
+      if (category && category !== 'undefined' && category !== 'null' && category !== '') {
         console.log(`🔍 Buscando productos en la categoría: ${category}`);
         const { data: categoryProducts, error: categoryError } = await query
           .eq('category', category)
@@ -159,6 +159,8 @@ export class ProductService {
           console.log(`✅ Encontrados ${categoryProducts.length} productos en la misma categoría`);
           return categoryProducts;
         }
+      } else {
+        console.log('ℹ️ No se proporcionó una categoría válida, buscando por nombre del producto');
       }
       
       // 2. Si no hay categoría o no se encontraron productos, buscar por palabras clave del nombre

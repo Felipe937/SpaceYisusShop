@@ -710,10 +710,26 @@
                 // Mostrar indicador de carga
                 relatedContainer.innerHTML = '<div class="loading">Cargando productos relacionados...</div>';
                 
+                // Validar y limpiar la categoría
+                const cleanCategory = (category && category !== 'undefined' && category !== 'null' && category.trim() !== '') 
+                    ? category.trim() 
+                    : null;
+                
+                console.log('📌 Buscando productos relacionados con:', {
+                    category: cleanCategory,
+                    excludeId,
+                    productName
+                });
+                
                 // Obtener productos relacionados
-                const relatedProducts = await ProductService.getRelatedProducts(category, excludeId, productName);
+                const relatedProducts = await ProductService.getRelatedProducts(
+                    cleanCategory, 
+                    excludeId, 
+                    productName
+                );
                 
                 if (!relatedProducts || relatedProducts.length === 0) {
+                    console.log('ℹ️ No se encontraron productos relacionados');
                     relatedContainer.innerHTML = '';
                     return;
                 }
