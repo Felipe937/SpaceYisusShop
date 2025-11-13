@@ -20,8 +20,12 @@
   ],
   "routes": [
     {
+      "src": "/producto/([^/]+)",
+      "dest": "/producto.html?id=$1"
+    },
+    {
       "src": "/product/([^/]+)",
-      "dest": "/product.html?id=$1"
+      "dest": "/producto.html?id=$1"
     },
     {
       "src": "/(.*)",
