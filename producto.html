@@ -691,12 +691,8 @@
                 // Actualizar precio
                 updatePrice();
                 
-                // Cargar productos relacionados
-                if (product.category) {
-                    loadRelatedProducts(product.category, product.id);
-                } else {
-                    console.log('ℹ️ El producto no tiene categoría, no se cargarán productos relacionados');
-                }
+                // Cargar productos relacionados, usando el nombre si no hay categoría
+                loadRelatedProducts(product.category, product.id, product.name);
                 
             } catch (error) {
                 console.error('Error al cargar el producto:', error);

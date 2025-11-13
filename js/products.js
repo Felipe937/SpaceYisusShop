@@ -67,25 +67,49 @@ export class ProductService {
     }
   }
 
-  static async getRelatedProducts(category, excludeId, limit = 4) {
+  static async getRelatedProducts(category, excludeId, productName, limit = 4) {
     try {
-      console.log('🔍 Buscando productos relacionados para categoría:', category);
+      console.log('🔍 Buscando productos relacionados para:', category || 'sin categoría');
       
-      // Si no hay categoría, devolver productos aleatorios
+      // Si no hay categoría, buscar por palabras clave del nombre
+      if (!category && productName) {
+        console.log('🔍 Buscando productos similares por nombre:', productName);
+        // Extraer palabras clave del nombre del producto
+        const keywords = productName.split(/\s+/).filter(word => word.length > 3);
+        
+        if (keywords.length > 0) {
+          // Crear una consulta OR para cada palabra clave
+          let orQuery = keywords.map(word => `name.ilike.%${word}%`).join(',');
+          
+          const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .or(orQuery)
+            .neq('id', excludeId)
+            .limit(limit);
+            
+          if (data && data.length > 0) {
+            console.log(`✅ Encontrados ${data.length} productos relacionados por nombre`);
+            return data;
+          }
+        }
+      }
+      
+      // Si hay categoría o no se encontraron productos por nombre, usar la lógica normal
       let query = supabase
         .from('products')
         .select('*')
-        .neq('id', excludeId)
-        .limit(limit);
+        .neq('id', excludeId);
       
-      // Si hay categoría, filtrar por ella
       if (category) {
         query = query.eq('category', category);
       } else {
-        console.log('ℹ️ No se especificó categoría, mostrando productos aleatorios');
-        // Ordenar aleatoriamente
+        console.log('ℹ️ Mostrando productos aleatorios');
+        // Ordenar por ID descendente (últimos productos)
         query = query.order('id', { ascending: false });
       }
+      
+      const { data } = await query.limit(limit);
       
       const { data: relatedProducts, error } = await query;
 
