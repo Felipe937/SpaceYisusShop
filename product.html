@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redireccionando...</title>
+    <script>
+        // Obtener el ID del producto de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        
+        // Redirigir a la versión correcta con la 'o'
+        if (productId) {
+            window.location.href = `/producto.html?id=${productId}`;
+        } else {
+            window.location.href = '/producto.html';
+        }
+    </script>
+</head>
+<body>
+    <p>Redirigiendo al producto...</p>
+</body>
+</html>
