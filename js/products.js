@@ -10,20 +10,20 @@ export class ProductService {
 
             console.log('Buscando producto con ID:', productId);
             
-            // Primero intentamos con el ID exacto
+            // Buscamos por el campo 'slug' en lugar de 'id'
             let { data: product, error } = await supabase
                 .from('products')
                 .select('*')
-                .eq('id', productId)
+                .eq('slug', productId)
                 .single();
 
-            // Si no encontramos el producto, intentamos con ilike (insensible a mayúsculas/minúsculas)
-            if (!product && error?.code === 'PGRST116') {
+            // Si no encontramos el producto, intentamos con búsqueda insensible
+            if (!product && (error?.code === 'PGRST116' || error?.code === '22P02')) {
                 console.log('Producto no encontrado con búsqueda exacta, intentando con búsqueda insensible...');
                 const { data, error: likeError } = await supabase
                     .from('products')
                     .select('*')
-                    .ilike('id', `%${productId}%`)
+                    .ilike('slug', `%${productId}%`)
                     .limit(1);
                 
                 if (likeError) {

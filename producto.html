@@ -860,24 +860,24 @@
         
         // Cargar los datos del producto cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('Página cargada, buscando ID del producto...');
-            const productId = getUrlParameter('id');
+            console.log('Página cargada, buscando slug del producto...');
+            const productSlug = getUrlParameter('id');
             console.log('URL completa:', window.location.href);
-            console.log('ID del producto de la URL:', productId);
+            console.log('Slug del producto de la URL:', productSlug);
             
             try {
-                if (!productId) {
-                    throw new Error('No se proporcionó un ID de producto en la URL');
+                if (!productSlug) {
+                    throw new Error('No se proporcionó un identificador de producto en la URL');
                 }
 
-                console.log('Cargando producto con ID:', productId);
-                const product = await ProductService.getProductById(productId);
+                console.log('Cargando producto con slug:', productSlug);
+                const product = await ProductService.getProductById(productSlug);
                 
                 if (!product) {
-                    throw new Error('No se encontró el producto con el ID proporcionado');
+                    throw new Error('No se encontró el producto solicitado');
                 }
 
-                await loadProduct(productId);
+                await loadProduct(productSlug);
             } catch (error) {
                 console.error('Error al cargar el producto:', error);
                 const errorMessage = error.message || 'Error al cargar el producto';
