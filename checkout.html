@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Finaliza tu compra en SpaceYisus Shop - Proceso de pago seguro y rápido">
+    <title>Checkout - SpaceYisus Shop</title>
+    
+    <!-- Preload de fuentes críticas -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- CSS crítico (inline) -->
+    <style>
+        /* Estilos críticos para el renderizado inicial */
+        :root{--primary:#9333ea;--primary-hover:#7e22ce;--bg-dark:#0b0f1a;--bg-card:#1f2937;--text-light:#f3f4f6;--text-muted:#9ca3af;--border-color:#374151}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:var(--bg-dark);color:var(--text-light);line-height:1.6}.container{max-width:1200px;margin:0 auto;padding:2rem}
+    </style>
+    
+    <!-- Cargar CSS no crítico de forma asíncrona -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+    
+    <!-- Preload de imágenes críticas -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150">
+    
+    <!-- Preconnect a dominios externos -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://images.unsplash.com">
+        }
+        
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .step.completed .step-number::after {
+            content: '✓';
+        }
+        
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .checkout-content {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .checkout-form {
+            flex: 2;
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        .checkout-summary {
+            flex: 1;
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #111827;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .checkout-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .summary-total {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .shipping-method, .payment-method {
+            background-color: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .shipping-method:hover, .payment-method:hover,
+        .shipping-method.selected, .payment-method.selected {
+            border-color: var(--primary);
+            background-color: rgba(147, 51, 234, 0.1);
+        }
+        
+        .shipping-method h4, .payment-method h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .shipping-method p, .payment-method p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .order-summary-item {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-summary-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 1rem;
+        }
+        
+        .order-summary-item-details {
+            flex: 1;
+        }
+        
+        .order-summary-item-details h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .order-summary-item-details p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .order-summary-item-price {
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-content {
+                flex-direction: column-reverse;
+            }
+            
+            .checkout-steps {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .step {
+                flex: 0 0 calc(50% - 1rem);
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    <!-- Script para cargar el CSS de forma asíncrona en caso de que falle el preload -->
+    <script>
+        // Función para cargar CSS de forma asíncrona
+        function loadCSS(href, before, media) {
+            var ss = window.document.createElement('link');
+            var ref = before || window.document.getElementsByTagName('script')[0];
+            ss.rel = 'stylesheet';
+            ss.href = href;
+            ss.media = 'only x';
+            ref.parentNode.insertBefore(ss, ref);
+            setTimeout(function() {
+                ss.media = media || 'all';
+            });
+            return ss;
+        }
+        
+        // Cargar CSS si no se ha cargado ya
+        if (!document.querySelector('link[href="css/styles.css"]')) {
+            loadCSS('css/styles.css');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header class="checkout-header">
+            <h1>Finalizar Compra</h1>
+            <p>Completa los siguientes pasos para finalizar tu pedido</p>
+        </header>
+        
+        <div class="checkout-steps">
+            <div class="step active" id="step-1">
+                <div class="step-number">1</div>
+                <div class="step-label">Información de envío</div>
+            </div>
+            <div class="step" id="step-2">
+                <div class="step-number">2</div>
+                <div class="step-label">Método de envío</div>
+            </div>
+            <div class="step" id="step-3">
+                <div class="step-number">3</div>
+                <div class="step-label">Método de pago</div>
+            </div>
+            <div class="step" id="step-4">
+                <div class="step-number">4</div>
+                <div class="step-label">Revisar y pagar</div>
+            </div>
+        </div>
+        
+        <div class="checkout-content">
+            <div class="checkout-form">
+                <!-- Paso 1: Información de envío -->
+                <form id="shipping-form" class="checkout-step">
+                    <h2>Información de envío</h2>
+                    <p>Ingresa la dirección de envío para tu pedido.</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">Nombres</label>
+                            <input type="text" id="first-name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Apellidos</label>
+                            <input type="text" id="last-name" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Teléfono</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Dirección</label>
+                        <input type="text" id="address" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Ciudad</label>
+                            <input type="text" id="city" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">Departamento</label>
+                            <select id="state" class="form-control" required>
+                                <option value="">Selecciona...</option>
+                                <option value="antioquia">Antioquia</option>
+                                <option value="bogota">Bogotá D.C.</option>
+                                <option value="valle">Valle del Cauca</option>
+                                <!-- Agrega más departamentos según sea necesario -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="zip">Código postal</label>
+                        <input type="text" id="zip" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Notas adicionales (opcional)</label>
+                        <textarea id="notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="checkout-actions">
+                        <a href="/cart" class="btn btn-outline">Volver al carrito</a>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(1)">Continuar al envío</button>
+                    </div>
+                </form>
+                
+                <!-- Paso 2: Método de envío -->
+                <div id="shipping-method" class="checkout-step hidden">
+                    <h2>Método de envío</h2>
+                    <p>Selecciona cómo deseas recibir tu pedido.</p>
+                    
+                    <div class="shipping-method selected" onclick="selectShippingMethod('estandar', this)">
+                        <h4>Envío Estándar</h4>
+                        <p>Entrega en 5-7 días hábiles</p>
+                        <p class="shipping-price">$15,000 COP</p>
+                    </div>
+                    
+                    <div class="shipping-method" onclick="selectShippingMethod('express', this)">
+                        <h4>Envío Express</h4>
+                        <p>Entrega en 1-3 días hábiles</p>
+                        <p class="shipping-price">$30,000 COP</p>
+                    </div>
+                    
+                    <div class="checkout-actions">
+                        <button type="button" class="btn btn-outline" onclick="prevStep(2)">Regresar</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Continuar al pago</button>
+                    </div>
+                </div>
+                
+                <!-- Paso 3: Método de pago -->
+                <div id="payment-method" class="checkout-step hidden">
+                    <h2>Método de pago</h2>
+                    <p>Selecciona tu método de pago preferido.</p>
+                    
+                    <div class="payment-method selected" onclick="selectPaymentMethod('credit-card', this)">
+                        <h4>Tarjeta de crédito/débito</h4>
+                        <p>Paga con tarjeta de crédito o débito</p>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPaymentMethod('pse', this)">
+                        <h4>PSE</h4>
+                        <p>Pago seguro en línea</p>
+                    </div>
+                    
+                    <div class="payment-method" onclick="selectPaymentMethod('efecty', this)">
+                        <h4>Efecty</h4>
+                        <p>Paga en efectivo en puntos autorizados</p>
+                    </div>
+                    
+                    <!-- Formulario de tarjeta de crédito (se muestra solo cuando se selecciona) -->
+                    <div id="credit-card-form" class="mt-4">
+                        <div class="form-group">
+                            <label for="card-number">Número de tarjeta</label>
+                            <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="card-expiry">Fecha de vencimiento</label>
+                                <input type="text" id="card-expiry" class="form-control" placeholder="MM/AA">
+                            </div>
+                            <div class="form-group">
+                                <label for="card-cvv">CVV</label>
+                                <input type="text" id="card-cvv" class="form-control" placeholder="123">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-name">Nombre en la tarjeta</label>
+                            <input type="text" id="card-name" class="form-control" placeholder="Como aparece en la tarjeta">
+                        </div>
+                    </div>
+                    
+                    <div class="checkout-actions">
+                        <button type="button" class="btn btn-outline" onclick="prevStep(3)">Regresar</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(3)">Revisar pedido</button>
+                    </div>
+                </div>
+                
+                <!-- Paso 4: Revisar y confirmar -->
+                <div id="review-order" class="checkout-step hidden">
+                    <h2>Revisa tu pedido</h2>
+                    <p>Verifica que toda la información sea correcta antes de realizar el pago.</p>
+                    
+                    <div class="order-summary">
+                        <h3>Resumen del pedido</h3>
+                        <div id="order-items">
+                            <!-- Los productos se agregarán aquí dinámicamente -->
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Envío</span>
+                            <span id="shipping-cost">$0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>IVA (19%)</span>
+                            <span id="tax">$0</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <span id="total">$0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="shipping-address mt-4">
+                        <h3>Dirección de envío</h3>
+                        <p id="shipping-address-text"></p>
+                    </div>
+                    
+                    <div class="payment-method-summary mt-4">
+                        <h3>Método de pago</h3>
+                        <p id="payment-method-text"></p>
+                    </div>
+                    
+                    <div class="form-group mt-4">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">Acepto los <a href="#" class="text-purple-500">Términos y Condiciones</a> y la <a href="#" class="text-purple-500">Política de Privacidad</a></label>
+                    </div>
+                    
+                    <div class="checkout-actions">
+                        <button type="button" class="btn btn-outline" onclick="prevStep(4)">Regresar</button>
+                        <button type="button" class="btn btn-primary" onclick="submitOrder()">Confirmar y pagar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checkout-summary">
+                <h3>Resumen del pedido</h3>
+                <div id="summary-items">
+                    <!-- Los productos se agregarán aquí dinámicamente -->
+                </div>
+                
+                <div class="summary-item">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">$0</span>
+                </div>
+                <div class="summary-item">
+                    <span>Envío</span>
+                    <span id="summary-shipping">$0</span>
+                </div>
+                <div class="summary-item">
+                    <span>IVA (19%)</span>
+                    <span id="summary-tax">$0</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="summary-total">$0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cargar JavaScript de forma diferida -->
+    <script src="js/checkout.js" defer></script>
+    
+    <!-- Google Analytics (ejemplo) -->
+    <script>
+        // Cargar analytics de forma asíncrona
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', 'UA-XXXXX-Y', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    
+    <script>
+        // Inicialización de service worker para caché de recursos
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        
+        // Precargar recursos para la siguiente página
+        const preloadHover = document.createElement('link');
+        preloadHover.rel = 'prefetch';
+        preloadHover.href = 'order-confirmation.html';
+        preloadHover.as = 'document';
+        document.head.appendChild(preloadHover);
+    </script>
+    <script>
+        // Este script se ha movido a js/checkout.js para mejor rendimiento
+        // El archivo se carga con el atributo 'defer' para no bloquear el renderizado
+    </script>
+</body>
+</html>
