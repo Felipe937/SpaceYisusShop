@@ -69,18 +69,32 @@ export class ProductService {
 
   static async getRelatedProducts(category, excludeId, limit = 4) {
     try {
-      const { data: relatedProducts, error } = await supabase
+      console.log('🔍 Buscando productos relacionados para categoría:', category);
+      
+      // Si no hay categoría, devolver productos aleatorios
+      let query = supabase
         .from('products')
         .select('*')
-        .eq('category', category)
         .neq('id', excludeId)
         .limit(limit);
+      
+      // Si hay categoría, filtrar por ella
+      if (category) {
+        query = query.eq('category', category);
+      } else {
+        console.log('ℹ️ No se especificó categoría, mostrando productos aleatorios');
+        // Ordenar aleatoriamente
+        query = query.order('id', { ascending: false });
+      }
+      
+      const { data: relatedProducts, error } = await query;
 
       if (error) {
         console.error('⚠️ Error al obtener productos relacionados:', error);
         throw error;
       }
 
+      console.log(`✅ Encontrados ${relatedProducts?.length || 0} productos relacionados`);
       return relatedProducts || [];
     } catch (error) {
       console.error('💥 Error en getRelatedProducts:', error);
