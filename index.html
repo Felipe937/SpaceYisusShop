@@ -42,21 +42,247 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
         /* HEADER */
-        header {
-            background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #7e22ce 100%);
-            padding: 1rem 5%;
+        .main-header {
+            background: #0f172a;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Top Bar */
+        .header-top {
+            background: #1e293b;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .free-shipping {
+            color: var(--primary-light);
+            font-weight: 500;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .header-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .header-link:hover {
+            color: var(--primary-light);
+        }
+
+        /* Header Main */
+        .header-main {
+            padding: 1rem 0;
+            background: var(--background);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header-main .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+        }
+
+        .logo-text {
+            color: var(--text);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Search Bar */
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .search-form {
+            position: relative;
+            display: flex;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1.25rem;
+            border: 2px solid var(--surface-light);
+            border-radius: 30px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding-right: 50px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* User Actions */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .user-action {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .user-action:hover {
+            color: var(--primary-light);
+        }
+
+        .user-action i {
+            font-size: 1.25rem;
+        }
+
+        .action-text {
+            font-size: 0.75rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background: var(--surface);
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-light);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        /* Scrolled header styles */
+        .main-header.scrolled {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
         
-        header.scrolled {
-            padding: 0.75rem 5%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
+        .main-header.scrolled .header-main {
+            padding: 0.5rem 0;
         }
 
         .header-container {
@@ -425,6 +651,538 @@
             box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
         }
 
+        /* Promo Slider */
+        .promo-slider {
+            padding: 2rem 0;
+            background: var(--background);
+        }
+
+        .slider-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            height: 400px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .slide-content {
+            flex: 1;
+            color: white;
+            max-width: 50%;
+        }
+
+        .slide-content h2 {
+            font-size: 2.5rem;
+            margin: 1rem 0;
+            line-height: 1.2;
+        }
+
+        .slide-content h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .slide-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-slider {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: white;
+            color: var(--primary);
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-slider:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-image img {
+            max-height: 300px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .slider-arrow {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .slider-arrow:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            padding: 5rem 0;
+            background: var(--background);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .category-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: var(--text);
+            border: 1px solid var(--surface-light);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .category-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .category-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Best Sellers */
+        .best-sellers {
+            padding: 5rem 0;
+            background: var(--surface);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+            margin: 1.5rem auto;
+            border-radius: 2px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 0;
+            background: var(--background);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .testimonial-content {
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            opacity: 0.2;
+            position: absolute;
+            top: -1rem;
+            left: -0.5rem;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .testimonial-content p {
+            font-style: italic;
+            margin: 1.5rem 0 2rem;
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            margin: 0;
+            color: var(--text);
+        }
+
+        .rating {
+            color: #fbbf24;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Blog Section */
+        .blog-section {
+            padding: 5rem 0;
+            background: var(--surface);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .blog-card {
+            background: var(--background);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.05);
+        }
+
+        .blog-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-content h3 {
+            margin: 0 0 1rem;
+            font-size: 1.25rem;
+            line-height: 1.4;
+            color: var(--text);
+        }
+
+        .blog-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 0.75rem;
+        }
+
+        .btn-view-all {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 0.8rem 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-view-all:hover {
+            background: transparent;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Brands Section */
+        .brands-section {
+            padding: 4rem 0;
+            background: var(--background);
+            border-top: 1px solid var(--surface-light);
+            border-bottom: 1px solid var(--surface-light);
+        }
+
+        .brands-slider {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .brand-logo {
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            filter: grayscale(100%);
+        }
+
+        .brand-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .brand-logo img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Skeleton Loading */
+        .product-skeleton {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        .skeleton-image {
+            background: var(--surface-light);
+            height: 200px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .skeleton-line {
+            height: 12px;
+            background: var(--surface-light);
+            margin-bottom: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .skeleton-line.short {
+            width: 60%;
+        }
+
+        .skeleton-line.medium {
+            width: 80%;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .slide-content {
+                max-width: 60%;
+            }
+
+            .slide-content h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slider-container {
+                height: 350px;
+            }
+
+            .slide {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem 5%;
+                justify-content: center;
+            }
+
+            .slide-content {
+                max-width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .slide-image {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .slide-image img {
+                max-height: 200px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .slider-container {
+                height: 400px;
+            }
+
+            .slide-content h2 {
+                font-size: 1.75rem;
+            }
+
+            .slide-content p {
+                font-size: 1rem;
+            }
+
+            .btn-slider {
+                padding: 0.6rem 1.5rem;
+            }
+        }
+
         /* FOOTER */
         .footer {
             background: var(--surface);
@@ -634,36 +1392,99 @@
     </style>
 </head>
 <body>
-    <header id="header">
-        <div class="header-container">
-            <a href="#" class="logo">
-                <span class="logo-icon">🚀</span>
-                <h1 class="logo-text">SpaceYisus</h1>
-            </a>
-            <nav class="nav-links">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-home"></i>
-                    <span>Inicio</span>
-                </a>
-                <a href="collection.html" class="nav-link">
-                    <i class="fas fa-box"></i>
-                    <span>Productos</span>
-                </a>
-                <a href="contact.html" class="nav-link">
-                    <i class="fas fa-envelope"></i>
-                    <span>Contacto</span>
-                </a>
-                <a href="cart.html" class="nav-link" style="position: relative;">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Carrito</span>
-                    <span class="cart-count">0</span>
-                </a>
-                <a href="login.html" class="nav-link login-button" style="background: var(--primary); border-radius: 20px; padding: 0.5rem 1rem; margin-left: 0.5rem;">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Iniciar Sesión</span>
-                </a>
-            </nav>
+    <header class="main-header">
+        <!-- Top Bar -->
+        <div class="header-top">
+            <div class="container">
+                <span class="free-shipping">🚀 Envíos gratis en compras mayores a $200.000 COP</span>
+                <div class="header-links">
+                    <a href="#" class="header-link">
+                        <i class="fas fa-truck"></i>
+                        <span>Seguir pedido</span>
+                    </a>
+                    <a href="help.html" class="header-link">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Centro de ayuda</span>
+                    </a>
+                </div>
+            </div>
         </div>
+        
+        <!-- Main Header -->
+        <div class="header-main">
+            <div class="container">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">🚀</span>
+                    <h1 class="logo-text">SpaceYisus</h1>
+                </a>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <form class="search-form" action="collection.html" method="get">
+                        <input type="text" name="q" placeholder="Buscar productos..." class="search-input" aria-label="Buscar productos">
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- User Actions -->
+                <div class="user-actions">
+                    <a href="login.html" class="user-action" title="Mi cuenta">
+                        <i class="fas fa-user"></i>
+                        <span class="action-text">Mi cuenta</span>
+                    </a>
+                    <a href="wishlist.html" class="user-action" title="Lista de deseos">
+                        <i class="far fa-heart"></i>
+                        <span class="action-text">Deseos</span>
+                    </a>
+                    <a href="cart.html" class="user-action cart-action" title="Carrito de compras">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="action-text">Carrito</span>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="container">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="fas fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="collection.html" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-tag"></i>
+                            <span>Ofertas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-star"></i>
+                            <span>Novedades</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="contact.html" class="nav-link">
+                            <i class="fas fa-envelope"></i>
+                            <span>Contacto</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
     <section class="hero">
@@ -848,7 +1669,207 @@
         </div>
     </section>
 
-    <!-- Aquí podrías agregar más secciones como ofertas, categorías, etc. -->
+    <!-- Promotional Banner Slider -->
+    <section class="promo-slider">
+        <div class="container">
+            <div class="slider-container">
+                <div class="slide active" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                    <div class="slide-content">
+                        <h3>¡Oferta Especial!</h3>
+                        <h2>Hasta 40% de descuento en Smartwatches</h2>
+                        <p>Compra ahora y lleva tu tecnología al siguiente nivel</p>
+                        <a href="collection.html?category=smartwatches" class="btn-slider">Ver ofertas</a>
+                    </div>
+                    <div class="slide-image">
+                        <img src="https://cdn.pixabay.com/photo/2017/08/30/11/25/smart-watch-2696878_1280.png" alt="Smartwatch en oferta">
+                    </div>
+                </div>
+                <div class="slide" style="background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);">
+                    <div class="slide-content">
+                        <h3>Nuevos Lanzamientos</h3>
+                        <h2>Descubre nuestra última colección</h2>
+                        <p>Productos exclusivos que no encontrarás en otro lugar</p>
+                        <a href="collection.html?new-arrivals" class="btn-slider">Ver novedades</a>
+                    </div>
+                    <div class="slide-image">
+                        <img src="https://cdn.pixabay.com/photo/2016/11/29/08/41/apple-1868496_1280.jpg" alt="Nuevos productos">
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-arrow prev">❮</button>
+                    <div class="slider-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <button class="slider-arrow next">❯</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Explora por Categorías</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="categories-grid">
+                <a href="collection.html?category=smartwatches" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Smartwatches</h3>
+                    <p>Explora nuestra colección</p>
+                </a>
+                <a href="collection.html?category=audio" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3>Audio</h3>
+                    <p>La mejor calidad de sonido</p>
+                </a>
+                <a href="collection.html?category=smartphones" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Smartphones</h3>
+                    <p>Últimos modelos</p>
+                </a>
+                <a href="collection.html?category=accessories" class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3>Accesorios</h3>
+                    <p>Complementa tu tecnología</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers Section -->
+    <section class="best-sellers">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Los Más Vendidos</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Productos favoritos de nuestros clientes</p>
+            </div>
+            <div class="products-grid">
+                <!-- Product cards will be dynamically loaded here -->
+                <div class="product-skeleton">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line medium"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+                <!-- Repeat for 4 skeleton loaders -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="quote-icon">"</div>
+                        <p>Excelente servicio al cliente y productos de alta calidad. Mi smartwatch llegó antes de lo esperado y funciona perfectamente.</p>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Cliente satisfecho">
+                            <div class="author-info">
+                                <h4>María G.</h4>
+                                <div class="rating">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="quote-icon">"</div>
+                        <p>La mejor tienda de tecnología que he encontrado. Precios increíbles y envío súper rápido. ¡Volveré a comprar!</p>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Cliente satisfecho">
+                            <div class="author-info">
+                                <h4>Carlos M.</h4>
+                                <div class="rating">★★★★★</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog/Advice Section -->
+    <section class="blog-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Consejos y Novedades</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Mantente actualizado con las últimas tendencias tecnológicas</p>
+            </div>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Consejos de tecnología">
+                        <div class="blog-category">Tecnología</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3>5 Razones para Actualizar tu Smartphone en 2023</h3>
+                        <p>Descubre por qué este es el momento perfecto para actualizar tu dispositivo móvil.</p>
+                        <a href="#" class="read-more">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Guía de audífonos">
+                        <div class="blog-category">Guías</div>
+                    </div>
+                    <div class="blog-content">
+                        <h3>Guía Definitiva para Elegir los Mejores Auriculares Inalámbricos</h3>
+                        <p>Todo lo que necesitas saber antes de comprar tus próximos audífonos inalámbricos.</p>
+                        <a href="#" class="read-more">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+            <div class="text-center">
+                <a href="#" class="btn-view-all">Ver todos los artículos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="brands-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Marcas que nos respaldan</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="brands-slider">
+                <div class="brand-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/1200px-Xiaomi_logo_%282021-%29.svg.png" alt="Xiaomi">
+                </div>
+                <div class="brand-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1200px-Apple_logo_black.svg.png" alt="Apple">
+                </div>
+                <div class="brand-logo">
+                    <img src="https://1000marcas.net/wp-content/uploads/2019/12/logo-Samsung.png" alt="Samsung">
+                </div>
+                <div class="brand-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Huawei_Standard_logo.svg/2016px-Huawei_Standard_logo.svg.png" alt="Huawei">
+                </div>
+                <div class="brand-logo">
+                    <img src="https://1000marcas.net/wp-content/uploads/2022/12/OnePlus-Logo.png" alt="OnePlus">
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer>
         <div class="footer-content">
@@ -878,6 +1899,133 @@
 
     <!-- Scripts -->
     <script>
+        // Promo Slider Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            const prevBtn = document.querySelector('.prev');
+            const nextBtn = document.querySelector('.next');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // Show current slide
+            function showSlide(n) {
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Remove active class from all dots
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                
+                // Show current slide and activate corresponding dot
+                slides[n].classList.add('active');
+                dots[n].classList.add('active');
+                currentSlide = n;
+            }
+
+            // Next slide
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // Previous slide
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // Start autoplay
+            function startSlider() {
+                slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            }
+
+            // Pause autoplay when hovering over slider
+            const sliderContainer = document.querySelector('.slider-container');
+            sliderContainer.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+
+            // Resume autoplay when mouse leaves slider
+            sliderContainer.addEventListener('mouseleave', () => {
+                startSlider();
+            });
+
+            // Dot click event
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                });
+            });
+
+            // Navigation buttons
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                // Reset autoplay timer when manually changing slides
+                clearInterval(slideInterval);
+                startSlider();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                // Reset autoplay timer when manually changing slides
+                clearInterval(slideInterval);
+                startSlider();
+            });
+
+            // Touch events for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            sliderContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+                clearInterval(slideInterval);
+            }, { passive: true });
+
+            sliderContainer.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+                startSlider();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const swipeThreshold = 50; // Minimum distance to trigger slide change
+                const diff = touchStartX - touchEndX;
+
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        nextSlide();
+                    } else {
+                        prevSlide();
+                    }
+                }
+            }
+
+            // Initialize slider
+            showSlide(0);
+            startSlider();
+
+            // Lazy load images
+            const lazyImages = document.querySelectorAll('img[data-src]');
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        });
         // Función para cargar Supabase
         function loadSupabase() {
             return new Promise((resolve, reject) => {

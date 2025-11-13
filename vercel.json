@@ -1,0 +1,49 @@
+{
+  "routes": [
+    {
+      "src": "/producto",
+      "dest": "/producto.html"
+    },
+    {
+      "src": "/cart",
+      "dest": "/cart.html"
+    },
+    {
+      "src": "/collection",
+      "dest": "/collection.html"
+    },
+    {
+      "src": "/contact",
+      "dest": "/contact.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/login.html"
+    },
+    {
+      "src": "/recover",
+      "dest": "/recover.html"
+    },
+    {
+      "src": "/recover-password",
+      "dest": "/recover_password.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/register.html"
+    },
+    {
+      "src": "/theme",
+      "dest": "/theme.html"
+    },
+    {
+      "src": "/producto/(?<id>[^/]+)",
+      "dest": "/producto.html?id=$id"
+    },
+    {
+      "src": "/(.*)",
+      "status": 404,
+      "dest": "/404.html"
+    }
+  ]
+}

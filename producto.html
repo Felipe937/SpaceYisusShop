@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="product-title">Detalle del Producto - SpaceYisus Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f1a;
+            color: #fff;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(90deg, #1e3a8a, #9333ea);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ffd700;
+        }
+        .wrap {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .product-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+            padding: 2rem 0;
+        }
+        
+        /* Galería de imágenes */
+        .product-gallery {
+            position: relative;
+        }
+        
+        .main-image {
+            background: #1f2937;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .main-image img:hover {
+            transform: scale(1.02);
+        }
+        
+        .image-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .thumbnail {
+            border: 2px solid transparent;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail:hover, .thumbnail.active {
+            border-color: #9333ea;
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .product-image {
+            background: #1f2937;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        /* Detalles del producto */
+        .product-details {
+            color: #e5e7eb;
+            padding: 0 1rem;
+        }
+        .product-info h1 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            color: #fff;
+        }
+        .product-meta {
+            margin-bottom: 1rem;
+        }
+        .product-category {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        .product-availability {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        .product-price-container {
+            margin: 1.5rem 0;
+        }
+        .price {
+            font-size: 1.8rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .original-price {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+        .discount-badge {
+            font-size: 1.2rem;
+            color: #9ca3af;
+        }
+        .product-description {
+            margin: 2rem 0;
+            line-height: 1.7;
+        }
+        /* Calificación */
+        .product-rating {
+            margin: 1rem 0;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+        
+        .rating-count {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        
+        /* Precios */
+        .product-price {
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .current-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .original-price {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+        
+        .discount {
+            background: #ef4444;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        /* Opciones del producto */
+        .product-options {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #1f2937;
+            border-radius: 10px;
+        }
+        
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-title {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+        
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .option-btn {
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #e5e7eb;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option-btn:hover, .option-btn.active {
+            background: #9333ea;
+            border-color: #9333ea;
+        }
+        
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Acciones del producto */
+        .product-actions {
+            margin: 2rem 0;
+        }
+        
+        .quantity-selector {
+            display: inline-flex;
+            align-items: center;
+            background: #1f2937;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .qty-btn {
+            background: #374151;
+            border: none;
+            color: #e5e7eb;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .qty-btn:hover {
+            background: #4b5563;
+        }
+        
+        .qty-input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: none;
+            background: #1f2937;
+            color: #fff;
+            font-size: 1rem;
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .btn-add-to-cart, .btn-buy-now {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-add-to-cart {
+            background: #9333ea;
+            color: white;
+        }
+        
+        .btn-add-to-cart:hover {
+            background: #7e22ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn-buy-now {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-buy-now:hover {
+            background: #0d9f6e;
+            transform: translateY(-2px);
+        }
+        
+        /* Características del producto */
+        .product-features {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #1f2937;
+            border-radius: 10px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #e5e7eb;
+        }
+        
+        .feature i {
+            margin-right: 1rem;
+            color: #9333ea;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        .add-to-cart-btn {
+            background: #9333ea;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .add-to-cart-btn:hover {
+            background: #7e22ce;
+        }
+        .product-shipping {
+            margin-top: 2rem;
+        }
+        .shipping-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .shipping-info i {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+        .shipping-info strong {
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            background: #111827;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+        /* Responsive */
+        @media (max-width: 992px) {
+            .product-page {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .image-thumbnails {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .product-details h1 {
+                font-size: 1.8rem;
+            }
+            
+            .product-price {
+                flex-wrap: wrap;
+            }
+            
+            .image-thumbnails {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .image-thumbnails {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .product-actions {
+                margin: 1.5rem 0;
+            }
+            
+            .btn-add-to-cart, .btn-buy-now {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 SpaceYisus Shop</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="#">Catálogo</a>
+            <a href="#">Ofertas</a>
+            <a href="#">Contacto</a>
+        </nav>
+    </header>
+
+    <div class="wrap">
+        <a href="/collection" class="back-link" style="display: inline-block; margin-bottom: 2rem; color: #9333ea; text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Volver a la colección
+        </a>
+        
+        <div class="product-page">
+            <!-- Galería de imágenes -->
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img id="main-product-img" src="" alt="Imagen del producto">
+                </div>
+                <div class="image-thumbnails" id="product-thumbnails">
+                    <!-- Miniaturas se llenarán con JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Detalles del producto -->
+            <div class="product-details">
+                <h1 id="product-title">Cargando producto...</h1>
+                
+                <!-- Valoración -->
+                <div class="product-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <span class="rating-count">(150 reviews)</span>
+                </div>
+                
+                <!-- Precios -->
+                <div class="product-price">
+                    <span class="current-price" id="current-price">$1,499,950</span>
+                    <span class="original-price" id="original-price">$1,999,950</span>
+                    <span class="discount" id="discount">25% OFF</span>
+                </div>
+                
+                <!-- Opciones del producto -->
+                <div class="product-options">
+                    <div class="option-group">
+                        <span class="option-title">Color:</span>
+                        <div class="option-buttons" id="color-options">
+                            <button class="option-btn active" data-value="black">Negro</button>
+                            <button class="option-btn" data-value="silver">Plateado</button>
+                            <button class="option-btn" data-value="gold">Dorado</button>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <span class="option-title">Almacenamiento:</span>
+                        <div class="option-buttons" id="storage-options">
+                            <button class="option-btn" data-value="64">64GB</button>
+                            <button class="option-btn active" data-value="128">128GB</button>
+                            <button class="option-btn" data-value="256">256GB</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Acciones -->
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <button class="qty-btn minus">-</button>
+                        <input type="number" class="qty-input" value="1" min="1">
+                        <button class="qty-btn plus">+</button>
+                    </div>
+                    
+                    <button class="btn-add-to-cart">
+                        <i class="fas fa-shopping-cart"></i> Añadir al Carrito
+                    </button>
+                    
+                    <button class="btn-buy-now">
+                        <i class="fas fa-bolt"></i> Comprar Ahora
+                    </button>
+                </div>
+                
+                <!-- Características -->
+                <div class="product-features">
+                    <div class="feature">
+                        <i class="fas fa-truck"></i>
+                        <div>
+                            <strong>Envío rápido</strong>
+                            <div style="font-size: 0.9rem; color: #9ca3af;">Recíbelo en 1-2 días hábiles</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-undo"></i>
+                        <div>
+                            <strong>Devolución fácil</strong>
+                            <div style="font-size: 0.9rem; color: #9ca3af;">30 días para devolución</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Garantía</strong>
+                            <div style="font-size: 0.9rem; color: #9ca3af;">12 meses de garantía</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-shipping">
+                    <div class="shipping-info">
+                        <i class="fas fa-truck"></i>
+                        <div>
+                            <strong>Envío gratis</strong>
+                            <p>En pedidos superiores a $50.000</p>
+                        </div>
+                    </div>
+                    <div class="shipping-info">
+                        <i class="fas fa-undo"></i>
+                        <div>
+                            <strong>Devoluciones fáciles</strong>
+                            <p>30 días para devoluciones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p> SpaceYisus Shop | Todos los derechos reservados</p>
+    </footer>
+
+    <script type="module">
+        import { ShoppingCart } from './js/cart.js';
+        
+        // Base de datos de productos (simulada)
+        const products = {
+            'smartwatch-pro-x1': {
+                id: 'smartwatch-pro-x1',
+                name: 'Smartwatch Pro X1',
+                description: 'El Smartwatch Pro X1 es el reloj inteligente definitivo con pantalla AMOLED, seguimiento de actividad avanzado y resistencia al agua.',
+                price: 1499950,
+                originalPrice: 1999950,
+                category: 'Tecnología > Wearables',
+                inStock: true,
+                images: [
+                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
+                    'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
+                    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
+                    'https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
+                ],
+                variants: {
+                    color: ['black', 'silver', 'gold'],
+                    storage: ['64', '128', '256']
+                },
+                specs: {
+                    pantalla: '1.78" AMOLED',
+                    bateria: '7 días',
+                    resistencia: '5ATM',
+                    conectividad: 'Bluetooth 5.0',
+                    sistema: 'Wear OS'
+                },
+                price: 1499950,
+                originalPrice: '1,999,950',
+                discount: '20%',
+                category: 'Tecnología > Wearables',
+                availability: 'En stock',
+                description: 'El Smartwatch Pro X1 es el compañero perfecto para mantenerte conectado y en forma con su diseño elegante y funciones avanzadas de seguimiento de actividad. Incluye monitoreo de frecuencia cardíaca, GPS integrado y resistencia al agua.',
+                image: 'https://atumano.com.co/wp-content/uploads/2024/01/msg1330939853-11079.jpg'
+            },
+            'cargador-rapido-45w': {
+                name: 'Cargador Rápido 45W',
+                price: '176,900',
+                originalPrice: '226,900',
+                discount: '22%',
+                category: 'Accesorios > Cargadores',
+                availability: 'En stock',
+                description: 'Carga tus dispositivos a máxima velocidad con este cargador rápido de 45W. Compatible con la mayoría de teléfonos inteligentes y tablets del mercado. Incluye cable USB-C de carga rápida.',
+                image: 'https://exitocol.vtexassets.com/arquivos/ids/826867/Cargador-Samsung-45W-USB-Type-C-Fast-Charge-Wall-Charger.jpg?v=637073505765800000'
+            },
+            'nerdminer-v3': {
+                name: 'Nerdminer v3',
+                price: '730,600',
+                category: 'Tecnología > Minería',
+                availability: 'Últimas unidades',
+                description: 'El Nerdminer v3 es un minero de criptomonedas eficiente y silencioso, perfecto para principiantes y expertos en minería. Incluye fuente de alimentación y guía de inicio rápido.',
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5CqjsLilkNh90LOyS9P3DFiYhjmWDty912w&s'
+            },
+            'cargador-laptop-240w': {
+                name: 'Cargador Laptop 240W',
+                price: '1,177,200',
+                originalPrice: '1,499,950',
+                discount: '25%',
+                category: 'Accesorios > Cargadores',
+                availability: 'En stock',
+                description: 'Cargador universal para laptop de 240W con múltiples puntas de conexión. Compatible con la mayoría de marcas y modelos de portátiles. Incluye estuche de transporte.',
+                image: 'https://http2.mlstatic.com/D_NQ_NP_854392-CBT93273726693_092025-O.webp'
+            },
+            'xiaomi-redmi-airdots-2': {
+                name: 'Xiaomi Redmi Airdots 2',
+                price: '233,400',
+                category: 'Audio > Audífonos',
+                availability: 'En stock',
+                description: 'Auriculares inalámbricos True Wireless con sonido de alta calidad y hasta 12 horas de reproducción con el estuche de carga. Control táctil y resistencia al sudor.',
+                image: 'https://exitocol.vtexassets.com/arquivos/ids/10981656/audifonos-xiaomi-redmi-airdots-2.jpg?v=637732193318300000'
+            }
+        };
+
+        // Variables globales
+        let currentProduct = null;
+        let selectedVariant = {
+            color: 'black',
+            storage: '128'
+        };
+        
+        // Función para obtener parámetros de la URL
+        function getUrlParameter(name) {
+            // Primero intentamos con el hash (#) para compatibilidad
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const params = new URLSearchParams(hash);
+                return params.get(name);
+            }
+            
+            // Si no hay hash, intentamos con el query string normal
+            name = name.replace(/\[/, '\\[').replace(/\]/, '\\]');
+            const regex = new RegExp('[\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+        
+        // Formatear precios
+        function formatPrice(price) {
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(price);
+        }
+        
+        // Actualizar miniaturas
+        function updateThumbnails(images) {
+            const container = document.getElementById('product-thumbnails');
+            container.innerHTML = '';
+            
+            images.forEach((img, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'thumbnail' + (index === 0 ? ' active' : '');
+                thumb.innerHTML = `<img src="${img}" alt="Miniatura ${index + 1}">`;
+                thumb.addEventListener('click', () => {
+                    document.getElementById('main-product-img').src = img;
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                });
+                container.appendChild(thumb);
+            });
+            
+            // Establecer la primera imagen como principal
+            if (images.length > 0) {
+                document.getElementById('main-product-img').src = images[0];
+            }
+        }
+        
+        // Actualizar variantes
+        function updateVariantOptions() {
+            if (!currentProduct) return;
+            
+            // Colores
+            const colorContainer = document.getElementById('color-options');
+            colorContainer.innerHTML = '';
+            
+            if (currentProduct.variants && currentProduct.variants.color) {
+                currentProduct.variants.color.forEach(color => {
+                    const btn = document.createElement('button');
+                    btn.className = `option-btn ${color === selectedVariant.color ? 'active' : ''}`;
+                    btn.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+                    btn.dataset.value = color;
+                    btn.addEventListener('click', () => {
+                        selectedVariant.color = color;
+                        document.querySelectorAll('#color-options .option-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        updatePrice();
+                    });
+                    colorContainer.appendChild(btn);
+                });
+            }
+            
+            // Almacenamiento
+            const storageContainer = document.getElementById('storage-options');
+            storageContainer.innerHTML = '';
+            
+            if (currentProduct.variants && currentProduct.variants.storage) {
+                currentProduct.variants.storage.forEach(storage => {
+                    const btn = document.createElement('button');
+                    btn.className = `option-btn ${storage === selectedVariant.storage ? 'active' : ''}`;
+                    btn.textContent = `${storage}GB`;
+                    btn.dataset.value = storage;
+                    btn.addEventListener('click', () => {
+                        selectedVariant.storage = storage;
+                        document.querySelectorAll('#storage-options .option-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        updatePrice();
+                    });
+                    storageContainer.appendChild(btn);
+                });
+            }
+        }
+        
+        // Actualizar precio según variante
+        function updatePrice() {
+            if (!currentProduct) return;
+            
+            // Aquí podrías tener lógica para calcular precios basados en las variantes
+            // Por ahora, usamos el precio base
+            const price = currentProduct.price;
+            const originalPrice = currentProduct.originalPrice;
+            
+            document.getElementById('current-price').textContent = formatPrice(price);
+            
+            if (originalPrice && originalPrice > price) {
+                const discount = Math.round((1 - (price / originalPrice)) * 100);
+                document.getElementById('original-price').textContent = formatPrice(originalPrice);
+                document.getElementById('discount').textContent = `${discount}% OFF`;
+                document.getElementById('original-price').style.display = 'inline';
+                document.getElementById('discount').style.display = 'inline';
+            } else {
+                document.getElementById('original-price').style.display = 'none';
+                document.getElementById('discount').style.display = 'none';
+            }
+        }
+        
+        // Inicializar selectores de cantidad
+        function initQuantitySelector() {
+            const minusBtn = document.querySelector('.qty-btn.minus');
+            const plusBtn = document.querySelector('.qty-btn.plus');
+            const qtyInput = document.querySelector('.qty-input');
+            
+            minusBtn.addEventListener('click', () => {
+                let value = parseInt(qtyInput.value) || 1;
+                if (value > 1) {
+                    qtyInput.value = value - 1;
+                }
+            });
+            
+            plusBtn.addEventListener('click', () => {
+                let value = parseInt(qtyInput.value) || 1;
+                qtyInput.value = value + 1;
+            });
+            
+            qtyInput.addEventListener('change', () => {
+                let value = parseInt(qtyInput.value) || 1;
+                if (value < 1) qtyInput.value = 1;
+            });
+        }
+        
+        // Inicializar botones de acción
+        function initActionButtons() {
+            // Añadir al carrito
+            document.querySelector('.btn-add-to-cart').addEventListener('click', async () => {
+                if (!currentProduct) return;
+                
+                const quantity = parseInt(document.querySelector('.qty-input').value) || 1;
+                const cart = await ShoppingCart.getInstance();
+                
+                const productToAdd = {
+                    ...currentProduct,
+                    variant: { ...selectedVariant },
+                    quantity: quantity
+                };
+                
+                await cart.addProduct(productToAdd, quantity);
+                
+                // Mostrar notificación
+                showNotification('Producto añadido al carrito');
+            });
+            
+            // Comprar ahora
+            document.querySelector('.btn-buy-now').addEventListener('click', async () => {
+                if (!currentProduct) return;
+                
+                const quantity = parseInt(document.querySelector('.qty-input').value) || 1;
+                const cart = await ShoppingCart.getInstance();
+                
+                const productToAdd = {
+                    ...currentProduct,
+                    variant: { ...selectedVariant },
+                    quantity: quantity
+                };
+                
+                await cart.addProduct(productToAdd, quantity);
+                
+                // Redirigir al checkout
+                window.location.href = 'cart.html';
+            });
+        }
+        
+        // Mostrar notificación
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // Cargar los datos del producto cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Página cargada, buscando ID del producto...');
+            const productId = getUrlParameter('id');
+            console.log('URL completa:', window.location.href);
+            console.log('ID del producto de la URL:', productId);
+            console.log('Productos disponibles:', Object.keys(products));
+            
+            if (productId) {
+                currentProduct = products[productId];
+                console.log('Producto encontrado:', currentProduct ? 'Sí' : 'No');
+                if (currentProduct) {
+                    console.log('Detalles del producto:', currentProduct);
+                }
+                // Actualizar la información del producto
+                document.title = `${currentProduct.name} | SpaceYisus Shop`;
+                document.getElementById('product-title').textContent = currentProduct.name;
+                
+                // Actualizar imágenes
+                if (currentProduct.images && currentProduct.images.length > 0) {
+                    updateThumbnails(currentProduct.images);
+                }
+                
+                // Actualizar variantes
+                updateVariantOptions();
+                
+                // Actualizar precios
+                updatePrice();
+                
+                // Inicializar selectores
+                initQuantitySelector();
+                initActionButtons();
+                
+            } else {
+                // Producto no encontrado
+                document.getElementById('product-title').textContent = 'Producto no encontrado';
+                document.querySelector('.product-actions').style.display = 'none';
+            }
+            
+            // Agregar estilos para notificaciones
+            const style = document.createElement('style');
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(100px);
+                    background: #10b981;
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                    z-index: 1000;
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                }
+                
+                .notification.show {
+                    transform: translateX(-50%) translateY(0);
+                    opacity: 1;
+                }
+                
+                .product-not-found {
+                    grid-column: 1 / -1;
+                    text-align: center;
+                    padding: 3rem 0;
+                }
+                
+                .product-not-found h2 {
+                    color: #fff;
+                    margin-bottom: 1rem;
+                }
+                
+                .product-not-found p {
+                    color: #9ca3af;
+                    margin-bottom: 1.5rem;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Mostrar mensaje si el producto no se encuentra
+            if (!currentProduct) {
+                const productPage = document.querySelector('.product-page');
+                if (productPage) {
+                    productPage.innerHTML = `
+                        <div class="product-not-found">
+                            <h2>Producto no encontrado</h2>
+                            <p>Lo sentimos, el producto que buscas no está disponible.</p>
+                            <a href="/collection" class="back-link" style="display: inline-block; margin-top: 1rem;">
+                                ← Volver a la tienda
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -345,11 +345,86 @@
         <p>© 2025 SpaceYisus Shop | Todos los derechos reservados</p>
     </footer>
 
-    <script>
-        // Simulación de funcionalidad del carrito
-        document.addEventListener('DOMContentLoaded', function() {
-            const quantityInputs = document.querySelectorAll('.quantity-input');
-            const removeButtons = document.querySelectorAll('.remove-item');
+    <!-- Incluir estilos para la animación -->
+    <style>
+        .add-to-cart-animation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+        
+        .add-to-cart-animation.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .add-to-cart-animation img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+        
+        .add-to-cart-animation span {
+            font-weight: 500;
+        }
+    </style>
+    
+    <!-- Incluir scripts -->
+    <script type="module">
+        import { ShoppingCart } from './js/cart.js';
+        
+        // Obtener instancia del carrito
+        let shoppingCart;
+        
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                shoppingCart = await ShoppingCart.getInstance();
+                setupEventListeners();
+                renderCart();
+            } catch (error) {
+                console.error('Error al inicializar el carrito:', error);
+                alert('Error al cargar el carrito. Por favor, recarga la página.');
+            }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Escuchar actualizaciones del carrito
+            document.addEventListener('cartUpdated', (event) => {
+                const { items, totals } = event.detail;
+                updateCartUI(items, totals);
+            });
+            
+            // Botón de checkout
+            const checkoutBtn = document.querySelector('.checkout-btn');
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', async () => {
+                    try {
+                        // Aquí iría la lógica de pago
+                        const confirmed = confirm('¿Deseas proceder con el pago?');
+                        if (confirmed) {
+                            await shoppingCart.clearCart();
+                            alert('¡Compra realizada con éxito!');
+                        }
+                    } catch (error) {
+                        console.error('Error al procesar el pago:', error);
+                        alert('Error al procesar el pago. Por favor, inténtalo de nuevo.');
+                    }
+                });
+            }
             const emptyCart = document.querySelector('.empty-cart');
             const cartWithItems = document.querySelector('.cart-with-items');
             const cartCount = document.getElementById('cart-count');
@@ -432,6 +507,107 @@
             
             // Inicializar
             updateTotals();
+            
+        // Renderizar el carrito
+        function renderCart() {
+            const items = shoppingCart.items;
+            const totals = shoppingCart.calculateTotals();
+            updateCartUI(items, totals);
+        }
+        
+        // Actualizar la UI del carrito
+        function updateCartUI(items, totals) {
+            const tbody = document.querySelector('.cart-table tbody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (!items || items.length === 0) {
+                document.querySelector('.cart-table').style.display = 'none';
+                document.querySelector('.cart-summary').style.display = 'none';
+                document.querySelector('.empty-cart').style.display = 'block';
+                return;
+            }
+            
+            document.querySelector('.cart-table').style.display = 'table';
+            document.querySelector('.cart-summary').style.display = 'block';
+            document.querySelector('.empty-cart').style.display = 'none';
+            
+            items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="cart-item">
+                            <img src="${item.image_url || 'https://via.placeholder.com/80'}" alt="${item.name}">
+                            <div class="item-details">
+                                <h3>${item.name}</h3>
+                                <p>${item.description || ''}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${shoppingCart.formatCurrency(item.price)}</td>
+                    <td>
+                        <div class="quantity-selector">
+                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" 
+                                   onchange="updateQuantity('${item.id}', this.value)">
+                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                        </div>
+                    </td>
+                    <td>${shoppingCart.formatCurrency(item.price * item.quantity)}</td>
+                    <td>
+                        <button class="remove-item" onclick="removeFromCart('${item.id}')">
+                            🗑️
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Actualizar totales
+            if (totals) {
+                document.querySelector('.subtotal-amount').textContent = totals.subtotal;
+                document.querySelector('.tax-amount').textContent = totals.tax;
+                document.querySelector('.shipping-amount').textContent = totals.shipping;
+                document.querySelector('.total-amount').textContent = totals.total;
+            }
+            
+        // Función para actualizar la cantidad de un producto
+        window.updateQuantity = async (productId, newQuantity) => {
+            try {
+                await shoppingCart.updateQuantity(productId, newQuantity);
+            } catch (error) {
+                console.error('Error al actualizar la cantidad:', error);
+                alert('Error al actualizar la cantidad. Por favor, inténtalo de nuevo.');
+            }
+        };
+        
+        // Función para eliminar un producto del carrito
+        window.removeFromCart = async (productId) => {
+            try {
+                await shoppingCart.removeItem(productId);
+            } catch (error) {
+                console.error('Error al eliminar el producto:', error);
+                alert('Error al eliminar el producto. Por favor, inténtalo de nuevo.');
+            }
+        };
+        
+        // Función para proceder al pago
+        window.checkout = () => {
+            if (shoppingCart.items.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            
+            const confirmed = confirm('¿Deseas proceder con el pago?');
+            if (confirmed) {
+                // Aquí iría la lógica de pago
+                console.log('Procesando pago...');
+                // Después del pago exitoso, limpiar el carrito
+                shoppingCart.clearCart();
+                alert('¡Compra realizada con éxito!');
+            }
+        };
         });
     </script>
 </body>
