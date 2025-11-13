@@ -1,124 +1,5 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/producto",
-      "dest": "/producto.html"
-    },
-    {
-      "src": "/cart",
-      "dest": "/cart.html"
-    },
-    {
-      "src": "/collection",
-      "dest": "/collection.html"
-    },
-    {
-      "src": "/contact",
-      "dest": "/contact.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/login.html"
-    },
-    {
-      "src": "/recover",
-      "dest": "/recover.html"
-    },
-    {
-      "src": "/recover-password",
-      "dest": "/recover_password.html"
-    },
-    {
-      "src": "/register",
-      "dest": "/register.html"
-    },
-    {
-      "src": "/theme",
-      "dest": "/theme.html"
-    },
-    {
-      "src": "/checkout",
-      "dest": "/checkout.html"
-    },
-    {
-      "src": "/producto/(?<id>[^/]+)",
-      "dest": "/producto.html?id=$id"
-    },
-    {
-      "src": "/(?!index\.html|404\.html|cart\.html|checkout\.html|collection\.html|contact\.html|login\.html|producto\.html|recover\.html|recover_password\.html|register\.html|theme\.html)(.*)",
-      "status": 404,
-      "dest": "/404.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
-        }
-      ]
-    },
-    {
-      "source": "/(.*).(js|css|jpg|jpeg|png|gif|webp|svg|woff|woff2|ttf|eot)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/sw.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache"
-        },
-        {
-          "key": "Service-Worker-Allowed",
-          "value": "/"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/service-worker.js",
-      "destination": "/sw.js"
-    }
-  ],
-  "outputDirectory": "dist",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": null,
-  "regions": ["gru1"],
-  "public": true,
-  "cleanUrls": true,
-  "trailingSlash": false,
   "builds": [
     {
       "src": "**/*.html",
@@ -126,15 +7,29 @@
     },
     {
       "src": "**/*.js",
-      "use": "@vercel/node"
+      "use": "@vercel/static"
     },
     {
       "src": "**/*.css",
-      "use": ["@vercel/static"]
+      "use": "@vercel/static"
     },
     {
-      "src": "**/*.{jpg,jpeg,png,gif,webp,svg,woff,woff2,ttf,eot}",
-      "use": ["@vercel/static"]
+      "src": "**/*.json",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/producto/([^/]+)",
+      "dest": "/producto.html?id=$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1.html"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     }
   ]
 }
