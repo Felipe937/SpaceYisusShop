@@ -1,90 +1,107 @@
-<!-- producto.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Detalles del Producto | SpaceYisusShop</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Producto | SpaceYisusShop</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main id="product-container" class="product-page">
-    <h1>Cargando producto...</h1>
+  <header>
+    <a href="index.html" class="logo">🪐 SpaceYisusShop</a>
+  </header>
+
+  <main id="product-page" class="container">
+    <section id="product-detail" class="product-detail">
+      <div id="product-image-container">
+        <img id="product-image" alt="Imagen del producto" />
+      </div>
+      <div class="product-info">
+        <h1 id="product-name"></h1>
+        <p id="product-description"></p>
+        <h2 id="product-price"></h2>
+        <button id="buy-button">🛒 Comprar</button>
+      </div>
+    </section>
+
+    <section id="related-products" class="related">
+      <h3>Productos relacionados</h3>
+      <div id="related-container" class="related-grid"></div>
+    </section>
   </main>
 
+  <footer>
+    <p>© 2025 SpaceYisusShop</p>
+  </footer>
+
   <script type="module">
-    import { ProductService } from './services/products.js';
+    import { ProductService } from './services/product.js'
 
-    async function loadProduct() {
-      console.log('📦 Página de producto cargada, buscando información...');
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('📄 Página cargada, buscando producto...')
 
-      // Obtener slug desde la URL (?id=)
-      const params = new URLSearchParams(window.location.search);
-      const productId = params.get('id');
-      console.log('🆔 ID de producto desde URL:', productId);
+      const url = new URL(window.location.href)
+      console.log('🌐 URL completa:', url.href)
+
+      // 🔎 Intentar primero con ?id=
+      let productId = url.searchParams.get('id')
+
+      // 🧩 Si no hay ?id=, obtener el último segmento del path
+      if (!productId) {
+        const pathParts = window.location.pathname.split('/')
+        productId = pathParts.pop() || pathParts.pop() // último segmento no vacío
+      }
+
+      console.log('🆔 Identificador del producto de la URL:', productId)
 
       if (!productId) {
-        document.getElementById('product-container').innerHTML = '<h2>Producto no encontrado</h2>';
-        return;
+        console.error('❌ No se proporcionó un identificador de producto en la URL')
+        document.getElementById('product-detail').innerHTML = `
+          <p class="error">No se encontró el producto solicitado.</p>
+        `
+        return
       }
 
-      const product = await ProductService.getProductById(productId);
-      const container = document.getElementById('product-container');
+      try {
+        const product = await ProductService.getProductById(productId)
+        if (!product) throw new Error('Producto no encontrado')
 
-      if (!product) {
-        container.innerHTML = '<h2>❌ Producto no encontrado</h2>';
-        return;
+        console.log('✅ Producto cargado:', product.name)
+
+        // Rellenar los datos en el HTML
+        document.getElementById('product-image').src = product.image_url || ''
+        document.getElementById('product-name').textContent = product.name
+        document.getElementById('product-description').textContent = product.description
+        document.getElementById('product-price').textContent = `$${Number(product.price).toLocaleString('es-CO')}`
+
+        // Cargar productos relacionados
+        const related = await ProductService.getRelatedProducts(null, product.id, product.name, 4)
+        const relatedContainer = document.getElementById('related-container')
+        relatedContainer.innerHTML = ''
+
+        if (related.length === 0) {
+          relatedContainer.innerHTML = '<p>No hay productos relacionados.</p>'
+        } else {
+          related.forEach(r => {
+            const div = document.createElement('div')
+            div.className = 'related-item'
+            div.innerHTML = `
+              <a href="/producto/${r.slug}">
+                <img src="${r.image_url}" alt="${r.name}" />
+                <h4>${r.name}</h4>
+                <p>$${Number(r.price).toLocaleString('es-CO')}</p>
+              </a>
+            `
+            relatedContainer.appendChild(div)
+          })
+        }
+      } catch (error) {
+        console.error('💥 Error al cargar el producto:', error)
+        document.getElementById('product-detail').innerHTML = `
+          <p class="error">Error al cargar el producto: ${error.message}</p>
+        `
       }
-
-      // Renderizar producto
-      container.innerHTML = `
-        <section class="product">
-          <img src="${product.image_url}" alt="${product.name}" class="product-img"/>
-          <div class="product-info">
-            <h2>${product.name}</h2>
-            <p>${product.description}</p>
-            <h3>$${Number(product.price).toLocaleString('es-CO')}</h3>
-          </div>
-        </section>
-      `;
-    }
-
-    loadProduct();
+    })
   </script>
-</body>
-</html>
-                    grid-column: 1 / -1;
-                    text-align: center;
-                    padding: 3rem 0;
-                }
-                
-                .product-not-found h2 {
-                    color: #fff;
-                    margin-bottom: 1rem;
-                }
-                
-                .product-not-found p {
-                    color: #9ca3af;
-                    margin-bottom: 1.5rem;
-                }
-            `;
-            document.head.appendChild(style);
-            
-            // Mostrar mensaje si el producto no se encuentra
-            if (!currentProduct) {
-                const productPage = document.querySelector('.product-page');
-                if (productPage) {
-                    productPage.innerHTML = `
-                        <div class="product-not-found">
-                            <h2>Producto no encontrado</h2>
-                            <p>Lo sentimos, el producto que buscas no está disponible.</p>
-                            <a href="/collection" class="back-link" style="display: inline-block; margin-top: 1rem;">
-                                ← Volver a la tienda
-                            </a>
-                        </div>
-                    `;
-                }
-            }
-        });
-    </script>
 </body>
 </html>
