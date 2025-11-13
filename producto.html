@@ -865,12 +865,34 @@
             console.log('URL completa:', window.location.href);
             console.log('ID del producto de la URL:', productId);
             
-            if (productId) {
+            try {
+                if (!productId) {
+                    throw new Error('No se proporcionó un ID de producto en la URL');
+                }
+
+                console.log('Cargando producto con ID:', productId);
+                const product = await ProductService.getProductById(productId);
+                
+                if (!product) {
+                    throw new Error('No se encontró el producto con el ID proporcionado');
+                }
+
                 await loadProduct(productId);
-            } else {
-                // Producto no encontrado
-                document.getElementById('product-title').textContent = 'Producto no encontrado';
-                document.querySelector('.product-actions').style.display = 'none';
+            } catch (error) {
+                console.error('Error al cargar el producto:', error);
+                const errorMessage = error.message || 'Error al cargar el producto';
+                document.getElementById('product-title').textContent = errorMessage;
+                const productActions = document.querySelector('.product-actions');
+                if (productActions) {
+                    productActions.style.display = 'none';
+                }
+                
+                // Mostrar mensaje de error en la consola
+                console.group('Error de carga de producto');
+                console.error('Mensaje:', error.message);
+                console.error('ID del producto:', productId);
+                console.error('URL completa:', window.location.href);
+                console.groupEnd();
             }
             
             // Agregar estilos para notificaciones
