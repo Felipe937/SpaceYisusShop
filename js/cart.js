@@ -9,24 +9,21 @@ export class ShoppingCart {
 
     async initialize() {
         try {
-            // Verificar autenticación
+            // Verificar autenticación sin redirigir
             const { data: { user } } = await supabase.auth.getUser();
             this.currentUser = user;
             
-            if (!this.currentUser) {
-                console.warn('Usuario no autenticado. Redirigiendo a login...');
-                window.location.href = 'login.html';
-                return;
+            if (this.currentUser) {
+                // Si el usuario está autenticado, cargar el carrito desde Supabase
+                await this.loadCart();
+                this.syncWithLocalStorage();
+            } else {
+                // Si no está autenticado, cargar desde localStorage
+                this.loadFromLocalStorage();
             }
-
-            // Cargar carrito desde Supabase
-            await this.loadCart();
             
-            // Actualizar UI
+            // Actualizar UI en cualquier caso
             this.updateCartUI();
-            
-            // Sincronizar con localStorage para persistencia temporal
-            this.syncWithLocalStorage();
             
         } catch (error) {
             console.error('Error al inicializar el carrito:', error);
