@@ -109,9 +109,7 @@ export class ProductService {
         query = query.order('id', { ascending: false });
       }
       
-      const { data } = await query.limit(limit);
-      
-      const { data: relatedProducts, error } = await query;
+      const { data: relatedProducts, error } = await query.limit(limit);
 
       if (error) {
         console.error('⚠️ Error al obtener productos relacionados:', error);
