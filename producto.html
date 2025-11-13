@@ -565,283 +565,279 @@
 
     <script type="module">
         import { ShoppingCart } from './js/cart.js';
-        
-        // Base de datos de productos (simulada)
-        const products = {
-            'smartwatch-pro-x1': {
-                id: 'smartwatch-pro-x1',
-                name: 'Smartwatch Pro X1',
-                description: 'El Smartwatch Pro X1 es el reloj inteligente definitivo con pantalla AMOLED, seguimiento de actividad avanzado y resistencia al agua.',
-                price: 1499950,
-                originalPrice: 1999950,
-                category: 'Tecnología > Wearables',
-                inStock: true,
-                images: [
-                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
-                    'https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
-                    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
-                    'https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80'
-                ],
-                variants: {
-                    color: ['black', 'silver', 'gold'],
-                    storage: ['64', '128', '256']
-                },
-                specs: {
-                    pantalla: '1.78" AMOLED',
-                    bateria: '7 días',
-                    resistencia: '5ATM',
-                    conectividad: 'Bluetooth 5.0',
-                    sistema: 'Wear OS'
-                },
-                price: 1499950,
-                originalPrice: '1,999,950',
-                discount: '20%',
-                category: 'Tecnología > Wearables',
-                availability: 'En stock',
-                description: 'El Smartwatch Pro X1 es el compañero perfecto para mantenerte conectado y en forma con su diseño elegante y funciones avanzadas de seguimiento de actividad. Incluye monitoreo de frecuencia cardíaca, GPS integrado y resistencia al agua.',
-                image: 'https://atumano.com.co/wp-content/uploads/2024/01/msg1330939853-11079.jpg'
-            },
-            'cargador-rapido-45w': {
-                id: 'cargador-rapido-45w',
-                name: 'Cargador Rápido 45W',
-                price: 176900,
-                originalPrice: 226900,
-                discount: '22%',
-                category: 'Accesorios > Cargadores',
-                inStock: true,
-                images: [
-                    'https://exitocol.vtexassets.com/arquivos/ids/826867/Cargador-Samsung-45W-USB-Type-C-Fast-Charge-Wall-Charger.jpg?v=637073505765800000',
-                    'https://media.falabella.com/falabellaCO/143956179_01/w=800,h=800,fit=pad'
-                ],
-                variants: {
-                    color: ['blanco', 'negro'],
-                    potencia: ['25W', '45W']
-                },
-                specs: {
-                    potencia: '45W',
-                    puertos: '1x USB-C',
-                    compatibilidad: 'Smartphones, tablets y laptops',
-                    certificaciones: 'PD 3.0, PPS, QC 3.0'
-                },
-                availability: 'En stock',
-                description: 'Carga tus dispositivos a máxima velocidad con este cargador rápido de 45W. Compatible con la mayoría de teléfonos inteligentes y tablets del mercado. Incluye cable USB-C de carga rápida.'
-            },
-            'nerdminer-v3': {
-                name: 'Nerdminer v3',
-                price: '730,600',
-                category: 'Tecnología > Minería',
-                availability: 'Últimas unidades',
-                description: 'El Nerdminer v3 es un minero de criptomonedas eficiente y silencioso, perfecto para principiantes y expertos en minería. Incluye fuente de alimentación y guía de inicio rápido.',
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5CqjsLilkNh90LOyS9P3DFiYhjmWDty912w&s'
-            },
-            'cargador-laptop-240w': {
-                name: 'Cargador Laptop 240W',
-                price: '1,177,200',
-                originalPrice: '1,499,950',
-                discount: '25%',
-                category: 'Accesorios > Cargadores',
-                availability: 'En stock',
-                description: 'Cargador universal para laptop de 240W con múltiples puntas de conexión. Compatible con la mayoría de marcas y modelos de portátiles. Incluye estuche de transporte.',
-                image: 'https://http2.mlstatic.com/D_NQ_NP_854392-CBT93273726693_092025-O.webp'
-            },
-            'xiaomi-redmi-airdots-2': {
-                name: 'Xiaomi Redmi Airdots 2',
-                price: '233,400',
-                category: 'Audio > Audífonos',
-                availability: 'En stock',
-                description: 'Auriculares inalámbricos True Wireless con sonido de alta calidad y hasta 12 horas de reproducción con el estuche de carga. Control táctil y resistencia al sudor.',
-                image: 'https://exitocol.vtexassets.com/arquivos/ids/10981656/audifonos-xiaomi-redmi-airdots-2.jpg?v=637732193318300000'
-            }
-        };
+        import { ProductService } from './js/products.js';
 
         // Variables globales
         let currentProduct = null;
         let selectedVariant = {
-            color: 'black',
-            storage: '128'
+            color: null,
+            size: null
         };
-        
-        // Función para obtener parámetros de la URL
+
+        // Obtener parámetros de la URL
         function getUrlParameter(name) {
-            // Primero intentamos con el hash (#) para compatibilidad
-            const hash = window.location.hash.substring(1);
-            if (hash) {
-                const params = new URLSearchParams(hash);
-                return params.get(name);
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Cargar datos del producto
+        async function loadProduct(productId) {
+            try {
+                const product = await ProductService.getProductById(productId);
+                
+                if (!product) {
+                    document.getElementById('product-title').textContent = 'Producto no encontrado';
+                    return;
+                }
+
+                currentProduct = product;
+
+                // Actualizar la información del producto
+                document.title = `${product.name} - SpaceYisus Shop`;
+                document.getElementById('product-title').textContent = product.name;
+                document.getElementById('product-price').textContent = `$${product.price.toLocaleString()}`;
+                document.getElementById('product-original-price').textContent = product.original_price ? `$${product.original_price.toLocaleString()}` : '';
+                document.getElementById('product-description').textContent = product.description || 'Sin descripción disponible';
+                
+                // Actualizar disponibilidad
+                const availabilityElement = document.getElementById('product-availability');
+                if (availabilityElement) {
+                    const inStock = product.stock > 0;
+                    availabilityElement.textContent = inStock ? 'En stock' : 'Agotado';
+                    if (inStock) {
+                        availabilityElement.classList.add('in-stock');
+                        availabilityElement.classList.remove('out-of-stock');
+                    } else {
+                        availabilityElement.classList.add('out-of-stock');
+                        availabilityElement.classList.remove('in-stock');
+                    }
+                }
+
+                // Actualizar imágenes
+                const mainImage = document.getElementById('main-product-img');
+                const thumbnailsContainer = document.querySelector('.image-thumbnails');
+                
+                if (product.images && product.images.length > 0) {
+                    // Establecer imagen principal
+                    mainImage.src = product.images[0];
+                    mainImage.alt = product.name;
+                    
+                    // Limpiar miniaturas existentes
+                    thumbnailsContainer.innerHTML = '';
+                    
+                    // Crear miniaturas
+                    product.images.forEach((image, index) => {
+                        const thumbnail = document.createElement('div');
+                        thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                        thumbnail.innerHTML = `
+                            <img src="${image}" alt="${product.name} - Vista ${index + 1}" 
+                                 data-index="${index}" 
+                                 onclick="changeMainImage(${index})">
+                        `;
+                        thumbnailsContainer.appendChild(thumbnail);
+                    });
+                }
+
+                // Actualizar opciones de color si existen
+                const colorOptions = document.getElementById('color-options');
+                if (colorOptions && product.variants?.colors) {
+                    colorOptions.innerHTML = '';
+                    product.variants.colors.forEach((color, index) => {
+                        const colorOption = document.createElement('div');
+                        colorOption.className = `color-option ${index === 0 ? 'active' : ''}`;
+                        colorOption.style.backgroundColor = color.value || color.name.toLowerCase();
+                        colorOption.setAttribute('data-color', color.name);
+                        colorOption.setAttribute('title', color.name);
+                        colorOption.onclick = () => selectColor(color.name);
+                        colorOptions.appendChild(colorOption);
+                    });
+                    selectedVariant.color = product.variants.colors[0]?.name || null;
+                }
+
+                // Actualizar opciones de talla si existen
+                const sizeOptions = document.getElementById('size-options');
+                if (sizeOptions && product.variants?.sizes) {
+                    sizeOptions.innerHTML = '';
+                    product.variants.sizes.forEach((size, index) => {
+                        const sizeOption = document.createElement('div');
+                        sizeOption.className = `size-option ${index === 0 ? 'active' : ''}`;
+                        sizeOption.textContent = size;
+                        sizeOption.setAttribute('data-size', size);
+                        sizeOption.onclick = () => selectSize(size);
+                        sizeOptions.appendChild(sizeOption);
+                    });
+                    selectedVariant.size = product.variants.sizes[0] || null;
+                }
+
+                // Actualizar características
+                const featuresList = document.getElementById('product-features');
+                if (featuresList && product.features) {
+                    featuresList.innerHTML = '';
+                    product.features.forEach(feature => {
+                        const li = document.createElement('li');
+                        li.textContent = feature;
+                        featuresList.appendChild(li);
+                    });
+                }
+
+                // Actualizar valoración
+                updateRating(product.rating || 0, product.review_count || 0);
+                
+                // Actualizar precio
+                updatePrice();
+                
+                // Cargar productos relacionados
+                loadRelatedProducts(product.category, product.id);
+                
+            } catch (error) {
+                console.error('Error al cargar el producto:', error);
+                document.getElementById('product-title').textContent = 'Error al cargar el producto';
             }
-            
-            // Si no hay hash, intentamos con el query string normal
-            name = name.replace(/\[/, '\\[').replace(/\]/, '\\]');
-            const regex = new RegExp('[\?&]' + name + '=([^&#]*)');
-            const results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
-        
-        // Formatear precios
-        function formatPrice(price) {
-            return new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(price);
-        }
-        
-        // Actualizar miniaturas
-        function updateThumbnails(images) {
-            const container = document.getElementById('product-thumbnails');
-            container.innerHTML = '';
-            
-            images.forEach((img, index) => {
-                const thumb = document.createElement('div');
-                thumb.className = 'thumbnail' + (index === 0 ? ' active' : '');
-                thumb.innerHTML = `<img src="${img}" alt="Miniatura ${index + 1}">`;
-                thumb.addEventListener('click', () => {
-                    document.getElementById('main-product-img').src = img;
-                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                    thumb.classList.add('active');
+
+        // Cargar productos relacionados
+        async function loadRelatedProducts(category, excludeId) {
+            try {
+                const relatedProducts = await ProductService.getRelatedProducts(category, excludeId);
+                const relatedContainer = document.querySelector('.related-products');
+                
+                if (!relatedContainer || !relatedProducts.length) return;
+                
+                let html = '<h2>Productos Relacionados</h2><div class="related-products-grid">';
+                
+                relatedProducts.forEach(product => {
+                    html += `
+                        <div class="product-card">
+                            <a href="producto.html?id=${product.id}">
+                                <img src="${product.images?.[0] || 'https://via.placeholder.com/300'}" alt="${product.name}">
+                                <h3>${product.name}</h3>
+                                <p class="price">$${product.price.toLocaleString()}</p>
+                            </a>
+                        </div>
+                    `;
                 });
-                container.appendChild(thumb);
+                
+                html += '</div>';
+                relatedContainer.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error al cargar productos relacionados:', error);
+            }
+        }
+
+        // Cambiar imagen principal
+        window.changeMainImage = function(index) {
+            const mainImage = document.getElementById('main-product-img');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            
+            if (currentProduct?.images?.[index]) {
+                mainImage.src = currentProduct.images[index];
+                
+                // Actualizar miniatura activa
+                thumbnails.forEach((thumb, i) => {
+                    if (i === index) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+        };
+
+        // Seleccionar color
+        function selectColor(color) {
+            selectedVariant.color = color;
+            document.querySelectorAll('.color-option').forEach(option => {
+                if (option.getAttribute('data-color') === color) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
             });
-            
-            // Establecer la primera imagen como principal
-            if (images.length > 0) {
-                document.getElementById('main-product-img').src = images[0];
-            }
+            updatePrice();
         }
-        
-        // Actualizar variantes
-        function updateVariantOptions() {
-            if (!currentProduct) return;
-            
-            // Colores
-            const colorContainer = document.getElementById('color-options');
-            colorContainer.innerHTML = '';
-            
-            if (currentProduct.variants && currentProduct.variants.color) {
-                currentProduct.variants.color.forEach(color => {
-                    const btn = document.createElement('button');
-                    btn.className = `option-btn ${color === selectedVariant.color ? 'active' : ''}`;
-                    btn.textContent = color.charAt(0).toUpperCase() + color.slice(1);
-                    btn.dataset.value = color;
-                    btn.addEventListener('click', () => {
-                        selectedVariant.color = color;
-                        document.querySelectorAll('#color-options .option-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        updatePrice();
-                    });
-                    colorContainer.appendChild(btn);
-                });
-            }
-            
-            // Almacenamiento
-            const storageContainer = document.getElementById('storage-options');
-            storageContainer.innerHTML = '';
-            
-            if (currentProduct.variants && currentProduct.variants.storage) {
-                currentProduct.variants.storage.forEach(storage => {
-                    const btn = document.createElement('button');
-                    btn.className = `option-btn ${storage === selectedVariant.storage ? 'active' : ''}`;
-                    btn.textContent = `${storage}GB`;
-                    btn.dataset.value = storage;
-                    btn.addEventListener('click', () => {
-                        selectedVariant.storage = storage;
-                        document.querySelectorAll('#storage-options .option-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                        updatePrice();
-                    });
-                    storageContainer.appendChild(btn);
-                });
-            }
+
+        // Seleccionar talla
+        function selectSize(size) {
+            selectedVariant.size = size;
+            document.querySelectorAll('.size-option').forEach(option => {
+                if (option.getAttribute('data-size') === size) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+            updatePrice();
         }
-        
-        // Actualizar precio según variante
+
+        // Actualizar precio
         function updatePrice() {
             if (!currentProduct) return;
             
             // Aquí podrías tener lógica para calcular precios basados en las variantes
             // Por ahora, usamos el precio base
-            const price = currentProduct.price;
-            const originalPrice = currentProduct.originalPrice;
+            document.getElementById('product-price').textContent = `$${currentProduct.price.toLocaleString()}`;
+        }
+
+        // Actualizar valoración
+        function updateRating(rating, reviews) {
+            const ratingElement = document.getElementById('product-rating');
+            const reviewsElement = document.getElementById('product-reviews');
             
-            document.getElementById('current-price').textContent = formatPrice(price);
-            
-            if (originalPrice && originalPrice > price) {
-                const discount = Math.round((1 - (price / originalPrice)) * 100);
-                document.getElementById('original-price').textContent = formatPrice(originalPrice);
-                document.getElementById('discount').textContent = `${discount}% OFF`;
-                document.getElementById('original-price').style.display = 'inline';
-                document.getElementById('discount').style.display = 'inline';
-            } else {
-                document.getElementById('original-price').style.display = 'none';
-                document.getElementById('discount').style.display = 'none';
+            if (ratingElement) {
+                // Redondear a la media más cercana (0.5)
+                const roundedRating = Math.round(rating * 2) / 2;
+                ratingElement.innerHTML = '';
+                
+                for (let i = 0; i < 5; i++) {
+                    const star = document.createElement('i');
+                    star.className = `fas fa-star ${i < roundedRating ? 'filled' : ''}`;
+                    ratingElement.appendChild(star);
+                }
+                
+                if (reviewsElement) {
+                    reviewsElement.textContent = `${reviews} reseñas`;
+                }
             }
         }
         
-        // Inicializar selectores de cantidad
-        function initQuantitySelector() {
-            const minusBtn = document.querySelector('.qty-btn.minus');
-            const plusBtn = document.querySelector('.qty-btn.plus');
-            const qtyInput = document.querySelector('.qty-input');
+        // Agregar al carrito
+        document.querySelector('.btn-add-to-cart').addEventListener('click', async () => {
+            if (!currentProduct) return;
             
-            minusBtn.addEventListener('click', () => {
-                let value = parseInt(qtyInput.value) || 1;
-                if (value > 1) {
-                    qtyInput.value = value - 1;
-                }
-            });
+            const quantity = parseInt(document.querySelector('.qty-input').value) || 1;
+            const cart = await ShoppingCart.getInstance();
             
-            plusBtn.addEventListener('click', () => {
-                let value = parseInt(qtyInput.value) || 1;
-                qtyInput.value = value + 1;
-            });
+            const productToAdd = {
+                ...currentProduct,
+                variant: { ...selectedVariant },
+                quantity: quantity
+            };
             
-            qtyInput.addEventListener('change', () => {
-                let value = parseInt(qtyInput.value) || 1;
-                if (value < 1) qtyInput.value = 1;
-            });
-        }
+            await cart.addProduct(productToAdd, quantity);
+            
+            // Mostrar notificación
+            showNotification('Producto añadido al carrito');
+        });
         
-        // Inicializar botones de acción
-        function initActionButtons() {
-            // Añadir al carrito
-            document.querySelector('.btn-add-to-cart').addEventListener('click', async () => {
-                if (!currentProduct) return;
-                
-                const quantity = parseInt(document.querySelector('.qty-input').value) || 1;
-                const cart = await ShoppingCart.getInstance();
-                
-                const productToAdd = {
-                    ...currentProduct,
-                    variant: { ...selectedVariant },
-                    quantity: quantity
-                };
-                
-                await cart.addProduct(productToAdd, quantity);
-                
-                // Mostrar notificación
-                showNotification('Producto añadido al carrito');
-            });
+        // Comprar ahora
+        document.querySelector('.btn-buy-now').addEventListener('click', async () => {
+            if (!currentProduct) return;
             
-            // Comprar ahora
-            document.querySelector('.btn-buy-now').addEventListener('click', async () => {
-                if (!currentProduct) return;
-                
-                const quantity = parseInt(document.querySelector('.qty-input').value) || 1;
-                const cart = await ShoppingCart.getInstance();
-                
-                const productToAdd = {
-                    ...currentProduct,
-                    variant: { ...selectedVariant },
-                    quantity: quantity
-                };
-                
-                await cart.addProduct(productToAdd, quantity);
-                
-                // Redirigir al checkout
-                window.location.href = 'cart.html';
-            });
-        }
+            const quantity = parseInt(document.querySelector('.qty-input').value) || 1;
+            const cart = await ShoppingCart.getInstance();
+            
+            const productToAdd = {
+                ...currentProduct,
+                variant: { ...selectedVariant },
+                quantity: quantity
+            };
+            
+            await cart.addProduct(productToAdd, quantity);
+            
+            // Redirigir al checkout
+            window.location.href = 'cart.html';
+        });
         
         // Mostrar notificación
         function showNotification(message) {
@@ -868,33 +864,9 @@
             const productId = getUrlParameter('id');
             console.log('URL completa:', window.location.href);
             console.log('ID del producto de la URL:', productId);
-            console.log('Productos disponibles:', Object.keys(products));
             
             if (productId) {
-                currentProduct = products[productId];
-                console.log('Producto encontrado:', currentProduct ? 'Sí' : 'No');
-                if (currentProduct) {
-                    console.log('Detalles del producto:', currentProduct);
-                }
-                // Actualizar la información del producto
-                document.title = `${currentProduct.name} | SpaceYisus Shop`;
-                document.getElementById('product-title').textContent = currentProduct.name;
-                
-                // Actualizar imágenes
-                if (currentProduct.images && currentProduct.images.length > 0) {
-                    updateThumbnails(currentProduct.images);
-                }
-                
-                // Actualizar variantes
-                updateVariantOptions();
-                
-                // Actualizar precios
-                updatePrice();
-                
-                // Inicializar selectores
-                initQuantitySelector();
-                initActionButtons();
-                
+                await loadProduct(productId);
             } else {
                 // Producto no encontrado
                 document.getElementById('product-title').textContent = 'Producto no encontrado';
