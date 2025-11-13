@@ -2,6 +2,10 @@
   "version": 2,
   "routes": [
     {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
       "src": "/producto",
       "dest": "/producto.html"
     },
@@ -46,7 +50,7 @@
       "dest": "/producto.html?id=$id"
     },
     {
-      "src": "/(.*)",
+      "src": "/(?!index\.html|404\.html|cart\.html|checkout\.html|collection\.html|contact\.html|login\.html|producto\.html|recover\.html|recover_password\.html|register\.html|theme\.html)(.*)",
       "status": 404,
       "dest": "/404.html"
     }
