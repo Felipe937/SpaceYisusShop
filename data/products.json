@@ -1,0 +1,26 @@
+[
+  {
+    "id": "smartwatch-pro-x1",
+    "name": "Smartwatch Pro X1",
+    "description": "El reloj inteligente más avanzado con monitoreo de salud y GPS integrado.",
+    "price": 599900,
+    "category": "smartwatches",
+    "image_url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60"
+  },
+  {
+    "id": "audifonos-inalambricos-pro",
+    "name": "Audífonos Inalámbricos Pro",
+    "description": "Sonido de alta fidelidad con cancelación de ruido activa.",
+    "price": 899900,
+    "category": "audio",
+    "image_url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60"
+  },
+  {
+    "id": "smartphone-pro-max",
+    "name": "Smartphone Pro Max",
+    "description": "El teléfono más potente con cámara profesional y pantalla OLED.",
+    "price": 4599000,
+    "category": "smartphones",
+    "image_url": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60"
+  }
+]

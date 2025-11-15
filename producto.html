@@ -35,18 +35,30 @@
   </footer>
 
   <script type="module">
-    // Usar la misma URL base de la página actual para la API
-    const API_URL = window.location.origin + '/api';
+    // Cargar datos estáticos de productos
+    async function loadProducts() {
+      try {
+        const response = await fetch('/data/products.json');
+        if (!response.ok) throw new Error('No se pudieron cargar los productos');
+        return await response.json();
+      } catch (error) {
+        console.error('Error al cargar productos:', error);
+        return [];
+      }
+    }
 
     // Función para obtener un producto por ID o slug
     async function getProductoById(id) {
       try {
-        const response = await fetch(`${API_URL}/productos/${encodeURIComponent(id)}`);
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Producto no encontrado');
-        }
-        return await response.json();
+        const products = await loadProducts();
+        const product = products.find(p => 
+          p.id === id || 
+          (p._id && p._id === id) || 
+          (p.slug && p.slug === id)
+        );
+        
+        if (!product) throw new Error('Producto no encontrado');
+        return product;
       } catch (error) {
         console.error('Error al obtener el producto:', error);
         throw error;
@@ -56,12 +68,8 @@
     // Función para obtener productos por categoría
     async function getProductosByCategoria(categoria) {
       try {
-        const response = await fetch(`${API_URL}/productos?categoria=${encodeURIComponent(categoria)}`);
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Error al cargar productos relacionados');
-        }
-        return await response.json();
+        const products = await loadProducts();
+        return products.filter(p => p.category === categoria || p.categoria === categoria);
       } catch (error) {
         console.error('Error al obtener productos relacionados:', error);
         return [];
