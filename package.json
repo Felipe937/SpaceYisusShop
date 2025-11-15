@@ -1,0 +1,14 @@
+{
+  "name": "space-yisus-shop",
+  "version": "1.0.0",
+  "description": "Tienda en línea SpaceYisusShop",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "mongodb": "^4.13.0"
+  },
+  "devDependencies": {
+    "@vercel/node": "^2.8.0"
+  }
+}

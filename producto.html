@@ -35,14 +35,17 @@
   </footer>
 
   <script type="module">
-    // URL base de la API (cámbiala por la URL de tu backend cuando lo tengas)
-    const API_URL = 'https://tu-backend-api.com/api';
+    // Usar la misma URL base de la página actual para la API
+    const API_URL = window.location.origin + '/api';
 
-    // Función para obtener un producto por ID
+    // Función para obtener un producto por ID o slug
     async function getProductoById(id) {
       try {
-        const response = await fetch(`${API_URL}/productos/${id}`);
-        if (!response.ok) throw new Error('Producto no encontrado');
+        const response = await fetch(`${API_URL}/productos/${encodeURIComponent(id)}`);
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Producto no encontrado');
+        }
         return await response.json();
       } catch (error) {
         console.error('Error al obtener el producto:', error);
@@ -54,7 +57,10 @@
     async function getProductosByCategoria(categoria) {
       try {
         const response = await fetch(`${API_URL}/productos?categoria=${encodeURIComponent(categoria)}`);
-        if (!response.ok) throw new Error('Error al cargar productos relacionados');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Error al cargar productos relacionados');
+        }
         return await response.json();
       } catch (error) {
         console.error('Error al obtener productos relacionados:', error);
