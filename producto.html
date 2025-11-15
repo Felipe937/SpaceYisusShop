@@ -35,8 +35,32 @@
   </footer>
 
   <script type="module">
-    // Importar las funciones de MongoDB
-    const { getProductoById, getProductosByCategoria } = await import('./mongodb.js');
+    // URL base de la API (cámbiala por la URL de tu backend cuando lo tengas)
+    const API_URL = 'https://tu-backend-api.com/api';
+
+    // Función para obtener un producto por ID
+    async function getProductoById(id) {
+      try {
+        const response = await fetch(`${API_URL}/productos/${id}`);
+        if (!response.ok) throw new Error('Producto no encontrado');
+        return await response.json();
+      } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        throw error;
+      }
+    }
+
+    // Función para obtener productos por categoría
+    async function getProductosByCategoria(categoria) {
+      try {
+        const response = await fetch(`${API_URL}/productos?categoria=${encodeURIComponent(categoria)}`);
+        if (!response.ok) throw new Error('Error al cargar productos relacionados');
+        return await response.json();
+      } catch (error) {
+        console.error('Error al obtener productos relacionados:', error);
+        return [];
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', async () => {
       console.log('📄 Página cargada, buscando producto...');
