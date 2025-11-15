@@ -19,21 +19,10 @@
     }
   ],
   "routes": [
-    {
-      "src": "/producto/([^/]+)",
-      "dest": "/producto.html?id=$1"
-    },
-    {
-      "src": "/product/([^/]+)",
-      "dest": "/producto.html?id=$1"
-    },
-    {
-      "src": "/([^/]+)",
-      "dest": "/$1.html"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
-    }
+    { "handle": "filesystem" },
+    { "src": "/producto/([^/]+)", "dest": "/producto.html?id=$1" },
+    { "src": "/product/([^/]+)", "dest": "/producto.html?id=$1" },
+    { "src": "/(.*)", "dest": "/index.html" },
+    { "src": "/", "dest": "/index.html" }
   ]
 }
