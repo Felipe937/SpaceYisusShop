@@ -1,7 +1,7 @@
 // products.js
-import { supabase } from '../supabase.js';
+const { getProductos, getProductoById, getProductosByCategoria } = require('../mongodb.js');
 
-export class ProductService {
+class ProductService {
   static async getProductById(productId) {
     try {
       if (!productId) {
@@ -11,98 +11,68 @@ export class ProductService {
 
       console.log('🔍 Buscando producto con identificador:', productId);
 
-      // Mapeo de slugs conocidos y variaciones
-      const knownSlugs = {
-        'cargador-rapido-45w': ['cargador-rapido-45w', 'cargador-rápido-45w-usbc'],
-        'xiaomi-redmi-airdots-2': ['xiaomi-redmi-airdots-2'],
-        'camiseta-algodon-premium': ['camiseta-algodon-premium', 'camiseta-algodón-premium'],
-        'nerdminer-v3': ['nerdminer-v3'],
-        'lucky-miner-bitcoin-lv06': ['lucky-miner-bitcoin-lv06'],
-        'avalon-nano3-4t-miner': ['avalon-nano3-4t-miner'],
-        'cargador-laptop-240w': ['cargador-laptop-240w'],
-        'smartwatch-pro-x1': ['smartwatch-pro-x1'],
-      };
-
-      // 1️⃣ Intentar búsqueda exacta
-      console.log('🔍 Buscando producto con slug exacto:', productId);
+      // 1️⃣ Intentar búsqueda por ID
       try {
-        const { data: exactMatch, error: exactError } = await supabase
-          .from('products')
-          .select('*')
-          .eq('slug', productId)
-          .single();
-
-        if (exactError) {
-          console.warn('⚠️ Error en búsqueda exacta:', exactError);
-        } else if (exactMatch) {
-          console.log('✅ Producto encontrado por slug exacto:', exactMatch.name);
-          return exactMatch;
-        } else {
-          console.log('ℹ️ No se encontró el producto por slug exacto');
+        const product = await getProductoById(productId);
+        if (product) {
+          console.log('✅ Producto encontrado por ID:', product.nombre || product.name);
+          return product;
         }
       } catch (error) {
-        console.error('💥 Error en búsqueda exacta:', error);
+        console.warn('⚠️ Error en búsqueda por ID:', error);
       }
 
-      // 2️⃣ Normalizar slug (sin tildes)
-      const normalized = productId
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .trim();
-
-      console.log('🔍 Búsqueda normalizada:', normalized);
-
-      // 3️⃣ Buscar dentro de slugs conocidos
-      for (const [baseSlug, variations] of Object.entries(knownSlugs)) {
-        if (variations.includes(normalized)) {
-          console.log(`🔄 Intentando con slug conocido: ${baseSlug}`);
-
-          const { data: knownSlugMatch } = await supabase
-            .from('products')
-            .select('*')
-            .eq('slug', baseSlug)
-            .limit(1);
-
-          if (knownSlugMatch?.length > 0) {
-            console.log(`✅ Producto encontrado por slug conocido: ${baseSlug}`);
-            return knownSlugMatch[0];
-          }
+      // 2️⃣ Búsqueda por slug (asumiendo que el ID podría ser un slug)
+      try {
+        const allProducts = await getProductos();
+        
+        // Buscar por slug exacto
+        const exactMatch = allProducts.find(p => p.slug === productId);
+        if (exactMatch) {
+          console.log('✅ Producto encontrado por slug exacto:', exactMatch.nombre || exactMatch.name);
+          return exactMatch;
         }
-      }
 
-      // 4️⃣ Búsqueda flexible (slug parcial)
-      const { data: fuzzyMatch } = await supabase
-        .from('products')
-        .select('*')
-        .ilike('slug', `%${normalized}%`)
-        .limit(1);
+        // Búsqueda flexible (slug parcial)
+        const normalized = productId
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim();
 
-      if (fuzzyMatch?.length > 0) {
-        console.log('✅ Producto encontrado por búsqueda flexible:', fuzzyMatch[0].name);
-        return fuzzyMatch[0];
-      }
+        const fuzzyMatch = allProducts.find(p => 
+          p.slug && p.slug.toLowerCase().includes(normalized) ||
+          p.nombre && p.nombre.toLowerCase().includes(normalized) ||
+          p.name && p.name.toLowerCase().includes(normalized)
+        );
 
-      // 5️⃣ Búsqueda por nombre o descripción
-      const searchTerm = normalized.replace(/-/g, ' ');
-      console.log('🪄 Búsqueda por nombre/descripción:', searchTerm);
+        if (fuzzyMatch) {
+          console.log('✅ Producto encontrado por búsqueda flexible:', fuzzyMatch.nombre || fuzzyMatch.name);
+          return fuzzyMatch;
+        }
 
-      const { data: altData } = await supabase
-        .from('products')
-        .select('*')
-        .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`)
-        .limit(1);
+        // Búsqueda por nombre o descripción
+        const searchTerm = normalized.replace(/-/g, ' ');
+        const textMatch = allProducts.find(p => 
+          (p.nombre && p.nombre.toLowerCase().includes(searchTerm)) ||
+          (p.name && p.name.toLowerCase().includes(searchTerm)) ||
+          (p.descripcion && p.descripcion.toLowerCase().includes(searchTerm)) ||
+          (p.description && p.description.toLowerCase().includes(searchTerm))
+        );
 
-      if (altData?.length > 0) {
-        console.log('✅ Producto encontrado por nombre o descripción:', altData[0].name);
-        return altData[0];
-      }
+        if (textMatch) {
+          console.log('✅ Producto encontrado por nombre/descripción:', textMatch.nombre || textMatch.name);
+          return textMatch;
+        }
 
-      // 6️⃣ Fallback: devolver producto genérico
-      const { data: fallback } = await supabase.from('products').select('*').limit(1);
-      if (fallback?.length > 0) {
-        console.warn('⚠️ No se encontró el producto exacto, devolviendo uno genérico');
-        return fallback[0];
+        // Fallback: devolver el primer producto si no se encuentra ninguno
+        if (allProducts.length > 0) {
+          console.warn('⚠️ No se encontró el producto exacto, devolviendo uno genérico');
+          return allProducts[0];
+        }
+
+      } catch (error) {
+        console.error('💥 Error en búsqueda de productos:', error);
       }
 
       console.error('❌ No se encontró ningún producto en la base de datos');
@@ -124,53 +94,56 @@ export class ProductService {
 
       console.log('🔍 Buscando productos con ID distinto a:', excludeId);
       
-      // Primero, obtener el producto actual para obtener su categoría si existe
-      const { data: currentProduct } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', excludeId)
-        .single();
+      // Obtener todos los productos
+      const allProducts = await getProductos();
+      
+      // Encontrar el producto actual
+      const currentProduct = allProducts.find(p => p._id === excludeId || p.id === excludeId);
+      let relatedProducts = [];
 
-      let query = supabase
-        .from('products')
-        .select('*')
-        .neq('id', excludeId);
-
-      // Si el producto actual tiene categoría, filtrar por ella
-      if (currentProduct?.category) {
-        console.log(`🔍 Buscando productos en la categoría: ${currentProduct.category}`);
-        query = query.eq('category', currentProduct.category);
+      if (currentProduct?.categoria) {
+        // Filtrar por categoría si está disponible
+        console.log(`🔍 Buscando productos en la categoría: ${currentProduct.categoria}`);
+        relatedProducts = allProducts.filter(p => 
+          (p._id !== excludeId && p.id !== excludeId) && 
+          p.categoria === currentProduct.categoria
+        );
       } else if (productName) {
         // Si no hay categoría, buscar por palabras clave en el nombre
         const keywords = productName.split(/\s+/).filter(w => w.length > 3);
-        if (keywords.length > 0) {
-          const orQuery = keywords.map(w => `name.ilike.%${w}%`).join(',');
-          console.log('🔍 Buscando por palabras clave:', keywords);
-          query = query.or(orQuery);
-        }
-      }
-
-      // Aplicar límite y ordenar por fecha de creación
-      const { data: related, error } = await query
-        .order('created_at', { ascending: false })
-        .limit(limit);
-
-      if (error) {
-        console.warn('⚠️ Error al buscar productos relacionados:', error);
-        // Si hay error, devolver productos aleatorios
-        const { data: random } = await supabase
-          .from('products')
-          .select('*')
-          .neq('id', excludeId)
-          .order('created_at', { ascending: false })
-          .limit(limit);
+        console.log('🔍 Buscando por palabras clave:', keywords);
         
-        console.log(`ℹ️ Mostrando ${random?.length || 0} productos aleatorios`);
-        return random || [];
+        relatedProducts = allProducts.filter(p => {
+          if (p._id === excludeId || p.id === excludeId) return false;
+          
+          const name = (p.nombre || p.name || '').toLowerCase();
+          return keywords.some(keyword => 
+            name.includes(keyword.toLowerCase())
+          );
+        });
       }
 
-      console.log(`✅ Encontrados ${related?.length || 0} productos relacionados`);
-      return related || [];
+      // Si no encontramos suficientes productos relacionados, agregar algunos aleatorios
+      if (relatedProducts.length < limit) {
+        const remaining = limit - relatedProducts.length;
+        const otherProducts = allProducts.filter(p => 
+          (p._id !== excludeId && p.id !== excludeId) && 
+          !relatedProducts.some(rp => rp._id === p._id || rp.id === p.id)
+        );
+        
+        // Mezclar y tomar los necesarios
+        const randomProducts = [...otherProducts]
+          .sort(() => 0.5 - Math.random())
+          .slice(0, remaining);
+        
+        relatedProducts = [...relatedProducts, ...randomProducts];
+      }
+
+      // Limitar el número de resultados
+      relatedProducts = relatedProducts.slice(0, limit);
+      
+      console.log(`✅ Encontrados ${relatedProducts.length} productos relacionados`);
+      return relatedProducts;
     } catch (error) {
       console.error('💥 Error en getRelatedProducts:', error);
       return [];
