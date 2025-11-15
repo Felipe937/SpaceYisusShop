@@ -22,5 +22,13 @@
     "price": 4599000,
     "category": "smartphones",
     "image_url": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60"
+  },
+  {
+    "id": "cargador-rapido-45w",
+    "name": "Cargador Rápido 45W",
+    "description": "Cargador rápido de 45W compatible con múltiples dispositivos, incluyendo smartphones y tablets.",
+    "price": 149900,
+    "category": "accesorios",
+    "image_url": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500&auto=format&fit=crop&q=60"
   }
 ]
