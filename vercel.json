@@ -2,27 +2,38 @@
   "version": 2,
   "builds": [
     {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "**/*.html",
       "use": "@vercel/static"
     },
     {
-      "src": "**/*.js",
+      "src": "js/**/*.js",
       "use": "@vercel/static"
     },
     {
-      "src": "**/*.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.json",
+      "src": "css/**/*.css",
       "use": "@vercel/static"
     }
   ],
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/producto/([^/]+)", "dest": "/producto.html?id=$1" },
-    { "src": "/product/([^/]+)", "dest": "/producto.html?id=$1" },
-    { "src": "/(.*)", "dest": "/index.html" },
-    { "src": "/", "dest": "/index.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/producto/([^/]+)",
+      "dest": "/producto.html?id=$1"
+    },
+    {
+      "src": "/product/([^/]+)", 
+      "dest": "/producto.html?id=$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
