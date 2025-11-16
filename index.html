@@ -2026,61 +2026,9 @@
                 imageObserver.observe(img);
             });
         });
-        // Función para cargar Supabase
-        function loadSupabase() {
-            return new Promise((resolve, reject) => {
-                // Verificar si ya está cargado
-                if (window.supabase) {
-                    resolve(window.supabase);
-                    return;
-                }
-
-                // Crear script
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-                script.async = true;
-                script.onload = () => resolve(window.supabase);
-                script.onerror = (err) => {
-                    console.error('Error cargando Supabase:', err);
-                    reject(err);
-                };
-                document.head.appendChild(script);
-            });
-        }
-
         // Inicialización
-        document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 Iniciando conexión con Supabase...');
-            
-            try {
-                // Cargar Supabase
-                const supabase = await loadSupabase();
-                console.log('📦 Supabase cargado correctamente');
-
-                // Configurar cliente
-                const supabaseUrl = 'https://iexiugoyykoyrajhbekc.supabase.co';
-                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlleGl1Z295eWtveXJhamhiZWtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4MzIwOTMsImV4cCI6MjA3ODQwODA5M30.DIDTdoOSxfO5XlhFCuJAck6GGNzm9S32NqHktamkd18';
-                
-                console.log('🔑 Configurando cliente de Supabase...');
-                const client = supabase.createClient(supabaseUrl, supabaseKey);
-
-                // Probar conexión
-                console.log('🔍 Probando conexión con la base de datos...');
-                const { data, error } = await client.from('users').select('*');
-
-                if (error) throw error;
-                
-                console.log('✅ Conexión exitosa!');
-                console.log('📊 Datos recibidos:', data);
-                
-            } catch (error) {
-                console.error('❌ Error de conexión:', error);
-                console.log('Detalles técnicos:', {
-                    message: error.message,
-                    name: error.name,
-                    stack: error.stack
-                });
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Aplicación iniciada');
         });
     </script>
 </body>

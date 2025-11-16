@@ -1,178 +1,70 @@
-import { supabase } from '../supabase.js';
-
 export class ShoppingCart {
     constructor() {
         this.items = [];
-        this.currentUser = null;
-        this.initialize();
+        this.loadFromLocalStorage();
     }
 
-    async initialize() {
-        try {
-            // Verificar autenticación sin redirigir
-            const { data: { user } } = await supabase.auth.getUser();
-            this.currentUser = user;
-            
-            if (this.currentUser) {
-                // Si el usuario está autenticado, cargar el carrito desde Supabase
-                await this.loadCart();
-                this.syncWithLocalStorage();
-            } else {
-                // Si no está autenticado, cargar desde localStorage
-                this.loadFromLocalStorage();
-            }
-            
-            // Actualizar UI en cualquier caso
-            this.updateCartUI();
-            
-        } catch (error) {
-            console.error('Error al inicializar el carrito:', error);
-            // Cargar desde localStorage como respaldo
-            this.loadFromLocalStorage();
-        }
-    }
-
-    async loadCart() {
-        try {
-            const { data, error } = await supabase
-                .from('cart')
-                .select(`
-                    id as cart_item_id,
-                    quantity,
-                    products (*)
-                `)
-                .eq('user_id', this.currentUser.id);
-
-            if (error) throw error;
-
-            this.items = data.map(item => ({
-                ...item.products,
-                cart_item_id: item.cart_item_id,
-                quantity: item.quantity
-            }));
-
-            return this.items;
-        } catch (error) {
-            console.error('Error al cargar el carrito:', error);
-            throw error;
+    loadFromLocalStorage() {
+        const savedCart = localStorage.getItem('shoppingCart');
+        if (savedCart) {
+            this.items = JSON.parse(savedCart);
         }
     }
 
     async addProduct(product, quantity = 1) {
-        if (!this.currentUser) {
-            window.location.href = 'login.html';
-            return false;
-        }
-
         try {
-            // Verificar si el producto ya está en el carrito
             const existingItemIndex = this.items.findIndex(item => item.id === product.id);
             
             if (existingItemIndex >= 0) {
-                // Actualizar cantidad si el producto ya existe
-                const newQuantity = this.items[existingItemIndex].quantity + quantity;
-                return await this.updateQuantity(product.id, newQuantity);
+                // Actualizar cantidad si el producto ya está en el carrito
+                this.items[existingItemIndex].quantity += quantity;
             } else {
                 // Añadir nuevo ítem al carrito
-                const { data, error } = await supabase
-                    .from('cart')
-                    .insert([
-                        { 
-                            user_id: this.currentUser.id, 
-                            product_id: product.id, 
-                            quantity: quantity 
-                        }
-                    ])
-                    .select(`
-                        id as cart_item_id,
-                        quantity,
-                        products (*)
-                    `)
-                    .single();
-
-                if (error) throw error;
-
-                this.items.push({
-                    ...data.products,
-                    cart_item_id: data.cart_item_id,
-                    quantity: data.quantity
-                });
-
-                this.updateCartUI();
-                this.showAddToCartAnimation(product);
-                this.syncWithLocalStorage();
-                return true;
+                const newItem = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image || '',
+                    quantity: quantity
+                };
+                this.items.push(newItem);
             }
+            
+            this.syncWithLocalStorage();
+            this.updateUI();
+            return true;
         } catch (error) {
             console.error('Error al añadir al carrito:', error);
             return false;
         }
     }
 
-    async updateQuantity(productId, newQuantity) {
-        try {
-            newQuantity = parseInt(newQuantity);
-            if (isNaN(newQuantity) || newQuantity < 1) newQuantity = 1;
-
-            const itemIndex = this.items.findIndex(item => item.id === productId);
-            if (itemIndex === -1) return false;
-
-            const { error } = await supabase
-                .from('cart')
-                .update({ quantity: newQuantity })
-                .eq('id', this.items[itemIndex].cart_item_id);
-
-            if (error) throw error;
-
-            this.items[itemIndex].quantity = newQuantity;
-            this.updateCartUI();
-            this.syncWithLocalStorage();
-            return true;
-        } catch (error) {
-            console.error('Error al actualizar cantidad:', error);
-            return false;
+    updateQuantity(productId, newQuantity) {
+        if (newQuantity < 1) {
+            return this.removeItem(productId);
         }
+
+        const itemIndex = this.items.findIndex(item => item.id === productId);
+        if (itemIndex === -1) return false;
+
+        this.items[itemIndex].quantity = newQuantity;
+        this.syncWithLocalStorage();
+        this.updateUI();
+        return true;
     }
 
-    async removeItem(productId) {
-        try {
-            const item = this.items.find(item => item.id === productId);
-            if (!item) return false;
-
-            const { error } = await supabase
-                .from('cart')
-                .delete()
-                .eq('id', item.cart_item_id);
-
-            if (error) throw error;
-
-            this.items = this.items.filter(item => item.id !== productId);
-            this.updateCartUI();
-            this.syncWithLocalStorage();
-            return true;
-        } catch (error) {
-            console.error('Error al eliminar del carrito:', error);
-            return false;
-        }
+    removeItem(productId) {
+        this.items = this.items.filter(item => item.id !== productId);
+        this.syncWithLocalStorage();
+        this.updateUI();
+        return true;
     }
 
-    async clearCart() {
-        try {
-            const { error } = await supabase
-                .from('cart')
-                .delete()
-                .eq('user_id', this.currentUser.id);
-
-            if (error) throw error;
-
-            this.items = [];
-            this.updateCartUI();
-            this.syncWithLocalStorage();
-            return true;
-        } catch (error) {
-            console.error('Error al vaciar el carrito:', error);
-            return false;
-        }
+    clearCart() {
+        this.items = [];
+        this.syncWithLocalStorage();
+        this.updateUI();
+        return true;
     }
 
     calculateTotals() {

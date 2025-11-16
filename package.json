@@ -1,14 +1,28 @@
 {
-  "name": "space-yisus-shop",
+  "name": "spacevisualshop",
   "version": "1.0.0",
-  "description": "Tienda en línea SpaceYisusShop",
+  "type": "module",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "node server.js",
+    "start": "node server.js"
   },
   "dependencies": {
-    "mongodb": "^4.13.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "mongodb": "^6.21.0"
   },
-  "devDependencies": {
-    "@vercel/node": "^2.8.0"
-  }
+  "description": "",
+  "main": "check-db.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Felipe937/SpaceYisusShop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Felipe937/SpaceYisusShop/issues"
+  },
+  "homepage": "https://github.com/Felipe937/SpaceYisusShop#readme"
 }
