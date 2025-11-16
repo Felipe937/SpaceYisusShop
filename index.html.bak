@@ -1525,7 +1525,7 @@
                             <span class="rating-count">(215)</span>
                         </div>
                         <p>El Smartwatch Pro X1 es el compañero perfecto para mantenerte conectado y en forma con su diseño elegante y funciones avanzadas de seguimiento de actividad.</p>
-                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation(); carritoManager.agregarProducto('smartwatch-pro-x1', 'Smartwatch Pro X1', 1499950)">
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
                             <i class="fas fa-shopping-cart"></i> Añadir al carrito
                         </button>
                     </div>
@@ -1554,7 +1554,7 @@
                             <span class="rating-count">(89)</span>
                         </div>
                         <p>Carga tus dispositivos a máxima velocidad con este cargador rápido de 45W. Compatible con la mayoría de teléfonos inteligentes y tablets del mercado.</p>
-                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation(); carritoManager.agregarProducto('cargador-rapido-45w', 'Cargador Rápido 45W', 176900)">
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
                             <i class="fas fa-shopping-cart"></i> Añadir al carrito
                         </button>
                     </div>
@@ -1582,7 +1582,7 @@
                             <span class="rating-count">(215)</span>
                         </div>
                         <p>El Nerdminer v3 es un minero de criptomonedas eficiente y silencioso, perfecto para principiantes y expertos en minería.</p>
-                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation(); carritoManager.agregarProducto('nerdminer-v3', 'Nerdminer v3', 730600)">
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
                             <i class="fas fa-shopping-cart"></i> Añadir al carrito
                         </button>
                     </div>
@@ -1611,7 +1611,7 @@
                             <span class="rating-count">(42)</span>
                         </div>
                         <p>Cargador universal para laptop de 240W con múltiples puntas de conexión. Compatible con la mayoría de marcas y modelos de portátiles.</p>
-                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation(); carritoManager.agregarProducto('cargador-laptop-240w', 'Cargador Laptop 240W', 89900)">
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
                             <i class="fas fa-shopping-cart"></i> Añadir al carrito
                         </button>
                     </div>
@@ -1638,7 +1638,7 @@
                             <span class="rating-count">(152)</span>
                         </div>
                         <p>Auriculares inalámbricos True Wireless con sonido de alta calidad y hasta 12 horas de reproducción con el estuche de carga.</p>
-                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation(); carritoManager.agregarProducto('xiaomi-airdots-2', 'Xiaomi Redmi Airdots 2', 259900)">
+                        <button class="add-to-cart" onclick="event.preventDefault(); event.stopPropagation();">
                             <i class="fas fa-shopping-cart"></i> Añadir al carrito
                         </button>
                     </div>
