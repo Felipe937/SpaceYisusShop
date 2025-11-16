@@ -19,8 +19,8 @@
       <div class="product-info">
         <h1 id="product-name"></h1>
         <p id="product-description"></p>
-        <h2 id="product-price"></h2>
-        <button id="buy-button">🛒 Comprar</button>
+        <div class="product-price" id="product-price"></div>
+        <button id="buy-button" class="btn-primary">Añadir al carrito</button>
       </div>
     </section>
 
@@ -31,14 +31,14 @@
   </main>
 
   <footer>
-    <p> 2025 SpaceYisusShop</p>
+    <p>© 2025 SpaceYisusShop</p>
   </footer>
 
   <script type="module">
     // Función para obtener producto desde MongoDB API
     async function getProductoById(id) {
         try {
-            console.log(' Buscando producto en API con ID:', id);
+            console.log('🔍 Buscando producto en API con ID:', id);
             const response = await fetch(`/api/producto/${id}`);
             
             if (!response.ok) {
@@ -46,10 +46,10 @@
             }
             
             const product = await response.json();
-            console.log(' Producto encontrado:', product);
+            console.log('✅ Producto encontrado:', product);
             return product;
         } catch (error) {
-            console.error(' Error al obtener el producto:', error);
+            console.error('❌ Error al obtener el producto:', error);
             throw error;
         }
     }
@@ -72,13 +72,13 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-        console.log(' Página cargada, buscando producto...');
+        console.log('📄 Página cargada, buscando producto...');
 
         // Obtener ID del producto de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
 
-        console.log(' ID del producto:', productId);
+        console.log('🆔 ID del producto:', productId);
 
         if (!productId) {
             mostrarError('No se proporcionó un ID de producto');
@@ -106,7 +106,7 @@
             }
 
         } catch (error) {
-            console.error(' Error al cargar el producto:', error);
+            console.error('💥 Error al cargar el producto:', error);
             mostrarError(`Error: ${error.message}`);
         }
     });
@@ -155,20 +155,39 @@
         if (!productos || productos.length === 0) {
             relatedContainer.innerHTML = '<p>No hay productos relacionados disponibles.</p>';
             return;
-                <h4>${nombre}</h4>
-                <p>$${Number(precio).toLocaleString('es-CO')}</p>
-              </a>
-            `;
-            relatedContainer.appendChild(div);
-          });
         }
-      } catch (error) {
-        console.error('💥 Error al cargar el producto:', error)
+
+        relatedContainer.innerHTML = productos.map(producto => `
+            <div class="related-item">
+                <a href="/producto.html?id=${producto._id}">
+                    ${producto.imagen ? 
+                        `<img src="${producto.imagen}" alt="${producto.nombre}" />` : 
+                        '<div class="no-image">📷 Sin imagen</div>'
+                    }
+                    <h4>${producto.nombre}</h4>
+                    <p>$${Number(producto.precio).toLocaleString('es-CO')}</p>
+                </a>
+            </div>
+        `).join('');
+    }
+
+    // Función para mostrar error
+    function mostrarError(mensaje) {
         document.getElementById('product-detail').innerHTML = `
-          <p class="error">Error al cargar el producto: ${error.message}</p>
-        `
-      }
-    })
+            <div class="error">
+                <h2>Producto no encontrado</h2>
+                <p>${mensaje}</p>
+                <a href="index.html" class="back-link">← Volver a la tienda</a>
+            </div>
+        `;
+    }
+
+    // Función para agregar al carrito
+    function agregarAlCarrito(productoId) {
+        console.log('🛒 Agregando al carrito:', productoId);
+        // Aquí va tu lógica del carrito
+        alert(`Producto ${productoId} agregado al carrito`);
+    }
   </script>
 </body>
 </html>
