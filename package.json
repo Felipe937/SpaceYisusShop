@@ -1,1 +1,8 @@
-{"name":"spaceyisusshop","version":"1.0.0","type":"module"} 
+{
+  "name": "spaceyisusshop",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "mongodb": "^4.17.0"
+  }
+}
