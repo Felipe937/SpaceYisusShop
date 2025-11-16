@@ -1,37 +1,28 @@
-import { getProductos } from '../mongodb.js';
-
+// api/productos.js - Código SIMPLE
 export default async function handler(req, res) {
-  // Configurar headers CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // Manejar preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method === 'GET') {
-    try {
-      console.log('📦 API: Solicitando todos los productos');
-      
-      const productos = await getProductos();
-      
-      console.log(`✅ API: Enviando ${productos.length} productos`);
-      res.status(200).json(productos);
-      
-    } catch (error) {
-      console.error('❌ API Error:', error);
-      res.status(500).json({ 
-        error: 'Error interno del servidor',
-        message: error.message 
-      });
+  
+  // DATOS DE PRUEBA
+  const productos = [
+    {
+      _id: "cargador-rapido-45w",
+      nombre: "Cargador Rápido 45W",
+      precio: 89900,
+      categoria: "electronica",
+      descripcion: "Cargador rápido de 45W para dispositivos móviles",
+      imagen: "https://images.unsplash.com/photo-1609592810794-1c0d49c7b9bd?w=400",
+      stock: 25
+    },
+    {
+      _id: "smartwatch-pro-x1", 
+      nombre: "Smartwatch Pro X1",
+      precio: 1000960,
+      categoria: "electronica",
+      descripcion: "Smartwatch avanzado con múltiples funciones",
+      imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+      stock: 10
     }
-  } else {
-    res.status(405).json({ error: 'Método no permitido' });
-  }
-}
+  ];
 
-export const config = {
-  runtime: 'nodejs'
-};
+  res.status(200).json(productos);
+}

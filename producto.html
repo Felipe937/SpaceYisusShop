@@ -34,141 +34,95 @@
     <p> 2025 SpaceYisusShop</p>
   </footer>
 
-  <script type="module">
-    // Función para obtener producto desde MongoDB API
-    async function getProductoById(id) {
-        try {
-            console.log(' Buscando producto en API con ID:', id);
-            const response = await fetch(`/api/producto/${id}`);
-            
-            if (!response.ok) {
-                throw new Error('Producto no encontrado en la API');
-            }
-            
-            const product = await response.json();
-            console.log(' Producto encontrado:', product);
-            return product;
-        } catch (error) {
-            console.error(' Error al obtener el producto:', error);
-            throw error;
-        }
-    }
-
-    // Función para obtener productos relacionados
-    async function getProductosRelacionados(categoriaActual, productoActualId) {
-        try {
-            const response = await fetch('/api/productos');
-            const todosProductos = await response.json();
-            
-            // Filtrar productos de la misma categoría, excluyendo el actual
-            return todosProductos.filter(p => 
-                p.categoria === categoriaActual && 
-                p._id !== productoActualId
-            ).slice(0, 4); // Limitar a 4 productos
-        } catch (error) {
-            console.error('Error cargando productos relacionados:', error);
-            return [];
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        console.log(' Página cargada, buscando producto...');
-
-        // Obtener ID del producto de la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-
-        console.log(' ID del producto:', productId);
-
-        if (!productId) {
-            mostrarError('No se proporcionó un ID de producto');
-            return;
-        }
-
-        // Mostrar loading
-        mostrarLoading();
-
-        try {
-            // Obtener producto desde MongoDB
-            const product = await getProductoById(productId);
-            
-            if (!product) {
-                throw new Error('Producto no encontrado');
-            }
-
-            // Mostrar producto en la página
-            mostrarProducto(product);
-
-            // Cargar productos relacionados
-            if (product.categoria) {
-                const relacionados = await getProductosRelacionados(product.categoria, product._id);
-                mostrarProductosRelacionados(relacionados);
-            }
-
-        } catch (error) {
-            console.error(' Error al cargar el producto:', error);
-            mostrarError(`Error: ${error.message}`);
-        }
-    });
-
-    // Función para mostrar loading
-    function mostrarLoading() {
-        const productDetail = document.getElementById('product-detail');
-        productDetail.innerHTML = `
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>Cargando producto...</p>
-            </div>
-        `;
-    }
-
-    // Función para mostrar el producto
-    function mostrarProducto(product) {
-        const productImage = document.getElementById('product-image');
-        const productName = document.getElementById('product-name');
-        const productDescription = document.getElementById('product-description');
-        const productPrice = document.getElementById('product-price');
-        const buyButton = document.getElementById('buy-button');
-
-        // Imagen
-        if (product.imagen) {
-            productImage.src = product.imagen;
-            productImage.alt = product.nombre;
-            productImage.style.display = 'block';
-        } else {
-            productImage.style.display = 'none';
-        }
-
-        // Información
-        productName.textContent = product.nombre || 'Producto sin nombre';
-        productDescription.textContent = product.descripcion || 'Sin descripción disponible';
-        productPrice.textContent = product.precio ? `$${Number(product.precio).toLocaleString('es-CO')}` : 'Precio no disponible';
-
-        // Botón de compra
-        buyButton.onclick = () => agregarAlCarrito(product._id);
-    }
-
-    // Función para mostrar productos relacionados
-    function mostrarProductosRelacionados(productos) {
-        const relatedContainer = document.getElementById('related-container');
+  <script>
+// Función para obtener producto desde API
+async function getProductoById(id) {
+    try {
+        console.log('🔍 Buscando producto:', id);
+        const response = await fetch('/api/producto?id=' + id);
         
-        if (!productos || productos.length === 0) {
-            relatedContainer.innerHTML = '<p>No hay productos relacionados disponibles.</p>';
-            return;
-                <h4>${nombre}</h4>
-                <p>$${Number(precio).toLocaleString('es-CO')}</p>
-              </a>
-            `;
-            relatedContainer.appendChild(div);
-          });
+        if (!response.ok) {
+            throw new Error('Producto no encontrado');
         }
-      } catch (error) {
-        console.error('💥 Error al cargar el producto:', error)
-        document.getElementById('product-detail').innerHTML = `
-          <p class="error">Error al cargar el producto: ${error.message}</p>
-        `
-      }
-    })
-  </script>
+        
+        const product = await response.json();
+        console.log('✅ Producto encontrado:', product);
+        return product;
+    } catch (error) {
+        console.error('❌ Error:', error);
+        throw error;
+    }
+}
+
+// Cuando la página carga
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('📄 Página cargada');
+    
+    // Obtener ID de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    console.log('🆔 ID del producto:', productId);
+
+    if (!productId) {
+        mostrarError('No se encontró ID del producto en la URL');
+        return;
+    }
+
+    // Mostrar loading
+    document.getElementById('product-detail').innerHTML = `
+        <div style="text-align: center; padding: 50px;">
+            <div class="spinner">⏳</div>
+            <p>Cargando producto...</p>
+        </div>
+    `;
+
+    try {
+        // Obtener producto
+        const product = await getProductoById(productId);
+        mostrarProducto(product);
+        
+    } catch (error) {
+        console.error('💥 Error:', error);
+        mostrarError('Error: ' + error.message);
+    }
+});
+
+function mostrarProducto(product) {
+    const productImage = document.getElementById('product-image');
+    const productName = document.getElementById('product-name');
+    const productDescription = document.getElementById('product-description');
+    const productPrice = document.getElementById('product-price');
+    const buyButton = document.getElementById('buy-button');
+
+    // Imagen
+    if (product.imagen) {
+        productImage.src = product.imagen;
+        productImage.alt = product.nombre;
+    }
+
+    // Información
+    productName.textContent = product.nombre || 'Producto';
+    productDescription.textContent = product.descripcion || 'Sin descripción';
+    productPrice.textContent = product.precio ? '$' + product.precio.toLocaleString('es-CO') : 'Consultar precio';
+
+    // Botón de compra
+    buyButton.onclick = function() {
+        alert('Producto agregado al carrito: ' + product.nombre);
+    };
+
+    // Ocultar sección de relacionados si no hay datos
+    document.getElementById('related-products').style.display = 'none';
+}
+
+function mostrarError(mensaje) {
+    document.getElementById('product-detail').innerHTML = `
+        <div style="text-align: center; padding: 50px; color: red;">
+            <h2>😕 Producto no encontrado</h2>
+            <p>${mensaje}</p>
+            <a href="index.html" style="color: blue;">← Volver a la tienda</a>
+        </div>
+    `;
+}
+</script>
 </body>
 </html>
