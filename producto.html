@@ -13,20 +13,7 @@
 
   <main id="product-page" class="container">
     <section id="product-detail" class="product-detail">
-      <div id="product-image-container">
-        <img id="product-image" alt="Imagen del producto" />
-      </div>
-      <div class="product-info">
-        <h1 id="product-name"></h1>
-        <p id="product-description"></p>
-        <h2 id="product-price"></h2>
-        <button id="buy-button">🛒 Comprar</button>
-      </div>
-    </section>
-
-    <section id="related-products" class="related">
-      <h3>Productos relacionados</h3>
-      <div id="related-container" class="related-grid"></div>
+      <!-- El contenido se cargará dinámicamente -->
     </section>
   </main>
 
@@ -71,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Mostrar loading
     document.getElementById('product-detail').innerHTML = `
         <div style="text-align: center; padding: 50px;">
-            <div class="spinner">⏳</div>
+            <div style="font-size: 2rem;">⏳</div>
             <p>Cargando producto...</p>
         </div>
     `;
@@ -88,30 +75,29 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 function mostrarProducto(product) {
-    const productImage = document.getElementById('product-image');
-    const productName = document.getElementById('product-name');
-    const productDescription = document.getElementById('product-description');
-    const productPrice = document.getElementById('product-price');
-    const buyButton = document.getElementById('buy-button');
-
-    // Imagen
-    if (product.imagen) {
-        productImage.src = product.imagen;
-        productImage.alt = product.nombre;
-    }
-
-    // Información
-    productName.textContent = product.nombre || 'Producto';
-    productDescription.textContent = product.descripcion || 'Sin descripción';
-    productPrice.textContent = product.precio ? '$' + product.precio.toLocaleString('es-CO') : 'Consultar precio';
-
-    // Botón de compra
-    buyButton.onclick = function() {
-        alert('Producto agregado al carrito: ' + product.nombre);
-    };
-
-    // Ocultar sección de relacionados si no hay datos
-    document.getElementById('related-products').style.display = 'none';
+    const productDetail = document.getElementById('product-detail');
+    
+    // Crear HTML del producto
+    productDetail.innerHTML = `
+        <div class="producto-detalle">
+            <div class="producto-imagen">
+                <img src="${product.imagen || 'https://via.placeholder.com/400x300?text=Imagen+No+Disponible'}" 
+                     alt="${product.nombre}" 
+                     style="max-width: 100%; border-radius: 10px;">
+            </div>
+            <div class="producto-info">
+                <h1>${product.nombre || 'Producto'}</h1>
+                <p class="descripcion">${product.descripcion || 'Sin descripción disponible'}</p>
+                <p class="precio">$${(product.precio || 0).toLocaleString('es-CO')}</p>
+                <p class="categoria"><strong>Categoría:</strong> ${product.categoria || 'General'}</p>
+                <p class="stock"><strong>Stock:</strong> ${product.stock || 0} unidades</p>
+                <p class="envio"><strong>Envío:</strong> ${product.envio || 'Consultar'}</p>
+                <button class="btn-comprar" onclick="agregarAlCarrito('${product._id}')">
+                    🛒 Agregar al Carrito
+                </button>
+            </div>
+        </div>
+    `;
 }
 
 function mostrarError(mensaje) {
@@ -119,9 +105,14 @@ function mostrarError(mensaje) {
         <div style="text-align: center; padding: 50px; color: red;">
             <h2>😕 Producto no encontrado</h2>
             <p>${mensaje}</p>
-            <a href="index.html" style="color: blue;">← Volver a la tienda</a>
+            <a href="/" style="color: blue; text-decoration: underline;">← Volver a la tienda</a>
         </div>
     `;
+}
+
+function agregarAlCarrito(productoId) {
+    console.log('🛒 Agregando al carrito:', productoId);
+    alert('✅ Producto agregado al carrito: ' + productoId);
 }
 </script>
 </body>
