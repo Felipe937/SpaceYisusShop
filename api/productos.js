@@ -22,6 +22,16 @@ export default async function handler(req, res) {
       descripcion: "Smartwatch avanzado con multiples funciones",
       imagen: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
       stock: 10
+    },
+    {
+      _id: "nerdminer-v3",
+      nombre: "Nerdminer v3",
+      precio: 730600,
+      categoria: "electronica",
+      descripcion: "Miner avanzado para criptomonedas",
+      imagen: "https://images.unsplash.com/photo-1621570366844-bda4c4b43d57?w=400",
+      stock: 5,
+      envio: "3-5 días"
     }
   ];
   res.status(200).json(productos);
