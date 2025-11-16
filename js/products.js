@@ -1,7 +1,7 @@
-// products.js - Actualizado para MongoDB
+// products.js - Usando Netlify Functions
 export async function cargarProductos() {
     try {
-        const response = await fetch('/api/productos');
+        const response = await fetch('/.netlify/functions/productos');
         const productos = await response.json();
         mostrarProductos(productos);
     } catch (error) {

@@ -22,14 +22,15 @@
   </footer>
 
   <script>
-// Función para obtener producto desde API
+// Función para obtener producto desde API Netlify Function
 async function getProductoById(id) {
     try {
         console.log('🔍 Buscando producto:', id);
-        const response = await fetch('/api/producto?id=' + id);
+        const response = await fetch('/.netlify/functions/producto?id=' + id);
         
         if (!response.ok) {
-            throw new Error('Producto no encontrado');
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Producto no encontrado');
         }
         
         const product = await response.json();
