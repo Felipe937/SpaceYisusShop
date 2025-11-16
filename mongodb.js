@@ -15,8 +15,15 @@ export async function connectDB() {
 }
 
 export async function getProductos() {
-    const db = await connectDB();
-    return await db.collection("productos").find({}).toArray();
+    try {
+        const db = await connectDB();
+        const productos = await db.collection("productos").find({}).toArray();
+        console.log(`📦 MongoDB: Obtenidos ${productos.length} productos`);
+        return productos;
+    } catch (error) {
+        console.error("❌ MongoDB Error obteniendo productos:", error);
+        throw error;
+    }
 }
 
 export async function getProductoById(id) {

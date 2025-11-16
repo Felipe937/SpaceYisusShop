@@ -1,7 +1,7 @@
-import { getProductos } from '../mongodb.js';
+import { getProductoById } from '../mongodb.js';
 
 export default async function handler(req, res) {
-  // Configurar headers CORS
+  // Configurar CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -13,13 +13,23 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      console.log('📦 API: Solicitando todos los productos');
+      const { id } = req.query;
       
-      const productos = await getProductos();
+      console.log('🔍 API: Buscando producto ID:', id);
       
-      console.log(`✅ API: Enviando ${productos.length} productos`);
-      res.status(200).json(productos);
+      if (!id) {
+        return res.status(400).json({ error: 'Se requiere ID del producto' });
+      }
       
+      const producto = await getProductoById(id);
+      
+      if (producto) {
+        console.log('✅ API: Producto encontrado:', producto.nombre);
+        res.status(200).json(producto);
+      } else {
+        console.log('❌ API: Producto no encontrado');
+        res.status(404).json({ error: 'Producto no encontrado' });
+      }
     } catch (error) {
       console.error('❌ API Error:', error);
       res.status(500).json({ 
@@ -31,7 +41,3 @@ export default async function handler(req, res) {
     res.status(405).json({ error: 'Método no permitido' });
   }
 }
-
-export const config = {
-  runtime: 'nodejs'
-};
